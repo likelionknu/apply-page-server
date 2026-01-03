@@ -2,7 +2,7 @@
 name: 'Template: Refactor'
 about: 리펙토링 이슈 템플릿
 title: "[Refactor] "
-labels: ''
+labels: "\U0001F528 Refactor"
 assignees: ''
 
 ---
