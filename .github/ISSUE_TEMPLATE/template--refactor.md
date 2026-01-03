@@ -1,7 +1,7 @@
 ---
 name: 'Template: Refactor'
 about: 리펙토링 이슈 템플릿
-title: ''
+title: "[Refactor] "
 labels: ''
 assignees: ''
 
