@@ -5,6 +5,7 @@ import com.likelionknu.applyserver.auth.data.dto.response.ProfileResponseDto;
 import com.likelionknu.applyserver.auth.service.UserService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class UserController {
 
     @PatchMapping("/me/profile")
     @Operation(summary = "사용자 프로필 등록(변경)")
-    public GlobalResponse<ProfileResponseDto> modifyUsersProfile(String email,
-                                                   @RequestBody ModifyProfileRequestDto modifyProfileRequestDto) {
+    public GlobalResponse<ProfileResponseDto> modifyUsersProfile(@RequestParam("email") String email,
+                                                   @Valid @RequestBody ModifyProfileRequestDto modifyProfileRequestDto) {
         return GlobalResponse.ok(userService.modifyUsersProfile(email, modifyProfileRequestDto));
     }
 
