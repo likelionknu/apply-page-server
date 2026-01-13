@@ -2,6 +2,7 @@ package com.likelionknu.applyserver.auth.data.entity;
 
 import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
+import com.likelionknu.applyserver.recruit.entity.Recruit;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
