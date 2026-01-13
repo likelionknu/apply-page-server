@@ -23,10 +23,9 @@ public class UserController {
 
     @PatchMapping("/me/profile")
     @Operation(summary = "사용자 프로필 등록(변경)")
-    public GlobalResponse<Void> modifyUsersProfile(String email,
+    public GlobalResponse<ProfileResponseDto> modifyUsersProfile(String email,
                                                    @RequestBody ModifyProfileRequestDto modifyProfileRequestDto) {
-        userService.modifyUsersProfile(email, modifyProfileRequestDto);
-        return GlobalResponse.ok();
+        return GlobalResponse.ok(userService.modifyUsersProfile(email, modifyProfileRequestDto));
     }
 
     @GetMapping("/me/profile")

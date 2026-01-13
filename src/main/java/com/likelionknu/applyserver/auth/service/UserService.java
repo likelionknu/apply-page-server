@@ -15,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void modifyUsersProfile(String email, ModifyProfileRequestDto modifyProfileRequestDto) {
+    public ProfileResponseDto modifyUsersProfile(String email, ModifyProfileRequestDto modifyProfileRequestDto) {
         User user = userRepository.findByEmail(email);
         Profile profile = user.getProfile();
 
@@ -38,6 +38,16 @@ public class UserService {
         if(modifyProfileRequestDto.getPhone() != null) {
             profile.setPhone(modifyProfileRequestDto.getPhone());
         }
+
+        return ProfileResponseDto.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .profileUrl(user.getProfileUrl())
+                .depart(user.getProfile().getDepart())
+                .studentId(user.getProfile().getStudentId())
+                .grade(user.getProfile().getGrade())
+                .phone(user.getProfile().getPhone())
+                .build();
     }
 
     public ProfileResponseDto getUsersProfile(String email) {
