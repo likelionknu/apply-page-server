@@ -10,6 +10,7 @@ import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedExcep
 import com.likelionknu.applyserver.common.security.AuthenticationToken;
 import com.likelionknu.applyserver.common.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -30,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
@@ -63,6 +65,7 @@ public class AuthService {
 
             Map<String, Object> tokenBody = tokenResponse.getBody();
             if (tokenBody == null || !tokenBody.containsKey("access_token")) {
+                log.error("[getGoogleProfile] Google Access Token 발급 실패");
                 throw new GoogleAuthenticaionFailedException();
             }
             String accessToken = tokenBody.get("access_token").toString();
@@ -78,6 +81,7 @@ public class AuthService {
 
             Map<String, Object> attributes = userResponse.getBody();
             if (attributes == null) {
+                log.error("[getGoogleProfile] Google 소셜 프로필 조회 실패");
                 throw new GoogleAuthenticaionFailedException();
             }
 
@@ -123,7 +127,10 @@ public class AuthService {
         User user = userRepository.findByEmail(googleProfile.getEmail());
 
         if(user == null) {
+            log.info("[userSocialSignIn] 새로운 사용자: {}", googleProfile.getEmail());
             user = registerNewUser(googleProfile);
+        } else {
+            log.info("[userSocialSignIn] 기존 가입된 사용자: {}", googleProfile.getEmail());
         }
 
         Authentication authentication = createAuthentication(user);
@@ -137,6 +144,7 @@ public class AuthService {
     }
 
     public void userLogout(String email) {
+        log.info("[userLogout] 사용자 로그아웃: {}", email);
         jwtTokenProvider.expireUsersToken(email);
     }
 
@@ -147,6 +155,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email);
         Authentication authentication = createAuthentication(user);
         AuthenticationToken authenticationToken = jwtTokenProvider.generateToken(authentication);
+        log.info("[reissue] 사용자 JWT 재발급 완료: {}", user.getEmail());
 
         return TokenResponseDto.builder()
                 .accessToken(authenticationToken.getAccessToken())
