@@ -48,12 +48,11 @@ public class AuthService {
 
     private GoogleProfile getGoogleProfile(String code) {
         try {
-            String decodedCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
             RestTemplate restTemplate = new RestTemplate();
 
             String tokenUrl = "https://oauth2.googleapis.com/token";
             Map<String, String> params = new HashMap<>();
-            params.put("code", decodedCode);
+            params.put("code", code);
             params.put("client_id", clientId);
             params.put("client_secret", clientSecret);
             params.put("redirect_uri", redirectUri);
