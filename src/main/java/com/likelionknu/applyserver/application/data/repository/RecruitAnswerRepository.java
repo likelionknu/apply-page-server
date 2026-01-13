@@ -1,6 +1,6 @@
-package com.likelionknu.applyserver.auth.data.repository;
+package com.likelionknu.applyserver.application.data.repository;
 
-import com.likelionknu.applyserver.auth.data.entity.RecruitAnswer;
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

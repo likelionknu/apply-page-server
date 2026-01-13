@@ -1,6 +1,6 @@
-package com.likelionknu.applyserver.auth.data.entity;
+package com.likelionknu.applyserver.application.data.entity;
 
-import com.likelionknu.applyserver.recruit.entity.RecruitContent;
+import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

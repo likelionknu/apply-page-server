@@ -1,4 +1,4 @@
-package com.likelionknu.applyserver.recruit.entity;
+package com.likelionknu.applyserver.recruit.data.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
