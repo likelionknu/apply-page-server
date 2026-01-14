@@ -20,10 +20,14 @@ public class RecruitListResponse {
     public static RecruitListResponse from(Recruit recruit) {
         LocalDateTime now = LocalDateTime.now();
 
-        RecruitStatus status =
-                now.isAfter(recruit.getEndAt())
-                        ? RecruitStatus.CLOSED
-                        : RecruitStatus.OPEN;
+        RecruitStatus status;
+        if (now.isBefore(recruit.getStartAt())) {
+            status = RecruitStatus.UPCOMING;   // 모집 예정
+        } else if (now.isAfter(recruit.getEndAt())) {
+            status = RecruitStatus.CLOSED;     // 모집 마감
+        } else {
+            status = RecruitStatus.OPEN;       // 모집중
+        }
 
         return new RecruitListResponse(
                 recruit.getId(),
