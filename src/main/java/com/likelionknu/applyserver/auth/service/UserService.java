@@ -5,6 +5,9 @@ import com.likelionknu.applyserver.auth.data.dto.response.ProfileResponseDto;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.auth.exception.UserNotFoundException;
+import com.likelionknu.applyserver.common.response.ErrorCode;
+import com.likelionknu.applyserver.common.response.GlobalResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,11 @@ public class UserService {
     @Transactional
     public ProfileResponseDto modifyUsersProfile(String email, ModifyProfileRequestDto modifyProfileRequestDto) {
         User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            throw new UserNotFoundException();
+        }
+
         Profile profile = user.getProfile();
 
         if(modifyProfileRequestDto.getName() != null) {
@@ -53,6 +61,10 @@ public class UserService {
     public ProfileResponseDto getUsersProfile(String email) {
         User user = userRepository.findByEmail(email);
 
+        if(user == null) {
+            throw new UserNotFoundException();
+        }
+
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
@@ -67,6 +79,11 @@ public class UserService {
     public void deleteUsersProfile(String email) {
         // TODO: 다른 엔티티에 대한 사용자 데이터 삭제 로직 추가 필요
         User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            throw new UserNotFoundException();
+        }
+
         userRepository.delete(user);
     }
 }
