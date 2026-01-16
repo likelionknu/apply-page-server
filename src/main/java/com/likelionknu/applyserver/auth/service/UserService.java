@@ -6,8 +6,6 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.UserNotFoundException;
-import com.likelionknu.applyserver.common.response.ErrorCode;
-import com.likelionknu.applyserver.common.response.GlobalResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
