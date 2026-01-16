@@ -78,6 +78,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
+                .status(user.getProfile().getStatus().toString())
                 .build();
     }
 
