@@ -47,6 +47,10 @@ public class UserService {
             profile.setPhone(modifyProfileRequestDto.getPhone());
         }
 
+        if(modifyProfileRequestDto.getStatus() != null) {
+            profile.setStatus(modifyProfileRequestDto.getStatus());
+        }
+
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
@@ -55,6 +59,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
+                .status(user.getProfile().getStatus().toString())
                 .build();
     }
 
