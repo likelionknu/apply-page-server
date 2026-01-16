@@ -59,7 +59,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
-                .status(user.getProfile().getStatus().toString())
+                .status(user.getProfile().getStatus() == null ? null : user.getProfile().getStatus().getDisplayName())
                 .build();
     }
 
@@ -78,7 +78,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
-                .status(user.getProfile().getStatus().toString())
+                .status(user.getProfile().getStatus() == null ? null : user.getProfile().getStatus().getDisplayName())
                 .build();
     }
 
