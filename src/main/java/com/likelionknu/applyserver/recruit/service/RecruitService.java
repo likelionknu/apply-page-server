@@ -77,7 +77,7 @@ public class RecruitService {
                         profile.getDepart() != null &&
                         profile.getPhone() != null &&
                         profile.getGrade() != null &&
-                        profile.getStatus() == StudentStatus.ATTENDING;
+                        profile.getStatus() != null;
 
         // 7. 최종 지원 가능 여부 판단
         boolean availableApply =
