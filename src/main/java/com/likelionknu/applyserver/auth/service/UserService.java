@@ -6,8 +6,6 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.UserNotFoundException;
-import com.likelionknu.applyserver.common.response.ErrorCode;
-import com.likelionknu.applyserver.common.response.GlobalResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +45,10 @@ public class UserService {
             profile.setPhone(modifyProfileRequestDto.getPhone());
         }
 
+        if(modifyProfileRequestDto.getStatus() != null) {
+            profile.setStatus(modifyProfileRequestDto.getStatus());
+        }
+
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
@@ -55,6 +57,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
+                .status(user.getProfile().getStatus() == null ? null : user.getProfile().getStatus().getDisplayName())
                 .build();
     }
 
@@ -73,6 +76,7 @@ public class UserService {
                 .studentId(user.getProfile().getStudentId())
                 .grade(user.getProfile().getGrade())
                 .phone(user.getProfile().getPhone())
+                .status(user.getProfile().getStatus() == null ? null : user.getProfile().getStatus().getDisplayName())
                 .build();
     }
 

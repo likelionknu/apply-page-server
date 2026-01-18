@@ -24,4 +24,5 @@ public class ProfileResponseDto {
 
     private Integer grade;
     private String phone;
+    private String status;
 }

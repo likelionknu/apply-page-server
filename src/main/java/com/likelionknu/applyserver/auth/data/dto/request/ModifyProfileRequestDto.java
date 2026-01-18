@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.auth.data.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.likelionknu.applyserver.auth.data.enums.StudentStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -31,4 +32,6 @@ public class ModifyProfileRequestDto {
 
     @Pattern(regexp = "^01[016789]-\\d{3,4}-\\d{4}$")
     private String phone;
+
+    private StudentStatus status;
 }
