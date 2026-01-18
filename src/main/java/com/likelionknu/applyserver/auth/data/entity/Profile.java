@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.auth.data.entity;
 
+import com.likelionknu.applyserver.auth.data.enums.StudentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +34,8 @@ public class Profile {
 
     @Column
     private Integer grade;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private StudentStatus status;
 }
