@@ -4,7 +4,6 @@ import com.likelionknu.applyserver.application.data.repository.ApplicationReposi
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
-import com.likelionknu.applyserver.auth.data.enums.StudentStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
