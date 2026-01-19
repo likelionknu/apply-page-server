@@ -26,7 +26,7 @@ public class ApplicationController {
             @PathVariable Long id,
             @RequestBody List<ApplicationDraftSaveRequest> requests
     ) {
-        String email = SecurityUtil.getUsername(); // 여기서 username = email로 사용 중
+        String email = SecurityUtil.getUsername();
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
