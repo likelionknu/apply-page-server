@@ -37,4 +37,4 @@ out/
 .vscode/
 
 # local config
-application.yml.DS_Store
+application.yml
