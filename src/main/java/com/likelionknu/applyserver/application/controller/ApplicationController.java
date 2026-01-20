@@ -6,6 +6,7 @@ import com.likelionknu.applyserver.common.response.GlobalResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,14 @@ public class ApplicationController {
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
-            @RequestBody
-            @Valid
-            FinalSubmitRequestDto request
+            Authentication authentication,
+            @RequestBody @Valid FinalSubmitRequestDto request
     ) {
-        // TODO: security 연동
-        applicationService.finalSubmit(request);
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("인증이 필요합니다.");
+        }
 
+        applicationService.finalSubmit(authentication.getName(), request);
         return ResponseEntity.ok(GlobalResponse.ok());
     }
 }
