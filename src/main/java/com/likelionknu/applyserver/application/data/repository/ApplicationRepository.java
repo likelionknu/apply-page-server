@@ -12,4 +12,16 @@ import java.util.Optional;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     Optional<Application> findFirstByUserAndStatus(User user, ApplicationStatus status);
 
+
+    boolean existsByUserIdAndRecruitIdAndStatus(
+            Long userId,
+            Long recruitId,
+            ApplicationStatus status
+    );
+
+    boolean existsByUserIdAndRecruitIdAndStatusNot(
+            Long userId,
+            Long recruitId,
+            ApplicationStatus status
+    );
 }
