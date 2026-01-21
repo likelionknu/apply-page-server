@@ -28,11 +28,13 @@ public class RecruitController {
     }
 
     @GetMapping("/{id}/availability")
+    @Operation(summary = "공고 지원 가능 여부 조회")
     public GlobalResponse<RecruitAvailabilityResponse> checkAvailability(@PathVariable Long id) {
         return GlobalResponse.ok(recruitService.checkAvailability(id));
     }
 
     @GetMapping("/{id}/questions")
+    @Operation(summary = "공고 질문 목록 조회")
     public GlobalResponse<List<RecruitQuestionResponse>> getRecruitQuestions(@PathVariable Long id) {
         return GlobalResponse.ok(recruitService.getRecruitQuestions(id));
     }
