@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,22 @@ public class ApplicationService {
         Application application = applicationRepository
                 .findFirstByUserAndStatus(user, ApplicationStatus.DRAFT)
                 .orElseThrow(() -> new ApplicationDraftNotFoundException());
+
+        Long recruitId = application.getRecruit().getId();
+
+        List<RecruitContent> requiredContents = recruitContentRepository
+                .findAllByRecruit_IdAndRequiredTrue(recruitId);
+
+        Set<Long> submittedQuestionIds = new HashSet<>();
+        for (FinalSubmitRequestDto.Item item : request.items()) {
+            submittedQuestionIds.add(item.questionId());
+        }
+
+        for (RecruitContent required : requiredContents) {
+            if (!submittedQuestionIds.contains(required.getId())) {
+                throw new EmptyAnswerException();
+            }
+        }
 
         recruitAnswerRepository.deleteAllByApplication_Id(application.getId());
 
