@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecruitAnswerRepository extends JpaRepository<RecruitAnswer, Long> {
+    void deleteByApplication_Id(Long applicationId);
 }
