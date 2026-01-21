@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.application.controller;
 
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
+import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import jakarta.validation.Valid;
@@ -11,6 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.likelionknu.applyserver.application.data.dto.request.ApplicationDraftSaveRequest;
+import com.likelionknu.applyserver.common.security.SecurityUtil;
+import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicationController {
 
     private final ApplicationService applicationService;
+    private final UserRepository userRepository;
+    private final ApplicationFinalSubmitService applicationFinalSubmitService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
@@ -28,7 +39,23 @@ public class ApplicationController {
             throw new IllegalStateException("인증이 필요합니다.");
         }
 
-        applicationService.finalSubmit(authentication.getName(), request);
+        applicationFinalSubmitService.finalSubmit(authentication.getName(), request);
         return ResponseEntity.ok(GlobalResponse.ok());
+    }
+
+    @PutMapping("/drafts/{id}")
+    @Operation(summary = "지원서 임시 저장")
+    public GlobalResponse<Void> saveDraft(
+            @PathVariable Long id,
+            @RequestBody List<ApplicationDraftSaveRequest> requests
+    ) {
+        String email = SecurityUtil.getUsername();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        applicationService.saveDraft(user.getId(), id, requests);
+        return GlobalResponse.ok(null);
     }
 }
