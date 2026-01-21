@@ -1,6 +1,9 @@
 package com.likelionknu.applyserver.recruit.service;
 
+import com.likelionknu.applyserver.application.data.entity.Application;
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
+import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
@@ -20,8 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +35,7 @@ public class RecruitService {
 
     private final RecruitRepository recruitRepository;
     private final RecruitContentRepository recruitContentRepository;
+    private final RecruitAnswerRepository recruitAnswerRepository;
     private final UserRepository userRepository;
     private final ApplicationRepository applicationRepository;
 
@@ -43,21 +50,17 @@ public class RecruitService {
     @Transactional(readOnly = true)
     public RecruitAvailabilityResponse checkAvailability(Long recruitId) {
 
-        // 1. 로그인 사용자 조회
         String email = SecurityUtil.getUsername();
         User user = userRepository.findByEmail(email);
 
-        // 2. 모집공고 조회
         Recruit recruit = recruitRepository.findById(recruitId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
 
         LocalDateTime now = LocalDateTime.now();
 
-        // 3. 모집 기간 체크
-        boolean isOpen =
-                !now.isBefore(recruit.getStartAt()) && !now.isAfter(recruit.getEndAt());
+        boolean isOpen = !now.isBefore(recruit.getStartAt()) && !now.isAfter(recruit.getEndAt());
 
-        // 4. 임시 저장(DRAFT) 지원서 존재 여부
+        // 임시 저장(DRAFT) 지원서 존재 여부
         boolean existDraft =
                 applicationRepository.existsByUserIdAndRecruitIdAndStatus(
                         user.getId(),
@@ -65,7 +68,7 @@ public class RecruitService {
                         ApplicationStatus.DRAFT
                 );
 
-        // 5. 이미 제출된 지원서 존재 여부 (DRAFT 제외)
+        // 이미 제출된 지원서 존재 여부 (DRAFT 제외)
         boolean hasSubmitted =
                 applicationRepository.existsByUserIdAndRecruitIdAndStatusNot(
                         user.getId(),
@@ -73,7 +76,7 @@ public class RecruitService {
                         ApplicationStatus.DRAFT
                 );
 
-        // 6. 프로필 완성 여부
+        // 프로필 완성 여부 확인
         Profile profile = user.getProfile();
         boolean profileCompleted =
                 profile != null &&
@@ -83,7 +86,6 @@ public class RecruitService {
                         profile.getGrade() != null &&
                         profile.getStatus() != null;
 
-        // 7. 최종 지원 가능 여부 판단
         boolean availableApply = isOpen && !hasSubmitted && profileCompleted;
 
         return new RecruitAvailabilityResponse(availableApply, existDraft);
@@ -92,9 +94,29 @@ public class RecruitService {
     @Transactional(readOnly = true)
     public List<RecruitQuestionResponse> getRecruitQuestions(Long recruitId) {
 
-        List<RecruitContent> contents =
-                recruitContentRepository.findByRecruitIdOrderByPriorityAsc(recruitId);
+        List<RecruitContent> contents = recruitContentRepository.findByRecruitIdOrderByPriorityAsc(recruitId);
 
+        String email = SecurityUtil.getUsername();
+        User user = userRepository.findByEmail(email);
+
+        // 해당 공고에 대한 지원서 조회 (없을 수도 있음)
+        Optional<Application> applicationOpt = applicationRepository.findByUserIdAndRecruitId(user.getId(), recruitId);
+
+        // 답변 구성
+        Map<Long, String> answerMap = new HashMap<>();
+
+        if (applicationOpt.isPresent()) {
+            List<RecruitAnswer> answers = recruitAnswerRepository.findByApplicationId(applicationOpt.get().getId());
+
+            for (RecruitAnswer answer : answers) {
+                answerMap.put(
+                        answer.getContent().getId(),
+                        answer.getAnswer()
+                );
+            }
+        }
+
+        // 질문
         List<RecruitQuestionResponse> responses = new ArrayList<>();
 
         for (RecruitContent content : contents) {
@@ -102,7 +124,7 @@ public class RecruitService {
                     new RecruitQuestionResponse(
                             content.getId(),
                             content.getQuestion(),
-                            null
+                            answerMap.get(content.getId())
                     )
             );
         }
