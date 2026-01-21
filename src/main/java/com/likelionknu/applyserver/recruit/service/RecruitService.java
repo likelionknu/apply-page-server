@@ -10,13 +10,17 @@ import com.likelionknu.applyserver.common.response.GlobalException;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailabilityResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
+import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResponse;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
+import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
+import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +28,7 @@ import java.util.List;
 public class RecruitService {
 
     private final RecruitRepository recruitRepository;
+    private final RecruitContentRepository recruitContentRepository;
     private final UserRepository userRepository;
     private final ApplicationRepository applicationRepository;
 
@@ -79,11 +84,28 @@ public class RecruitService {
                         profile.getStatus() != null;
 
         // 7. 최종 지원 가능 여부 판단
-        boolean availableApply =
-                isOpen &&
-                        !hasSubmitted &&
-                        profileCompleted;
+        boolean availableApply = isOpen && !hasSubmitted && profileCompleted;
 
         return new RecruitAvailabilityResponse(availableApply, existDraft);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecruitQuestionResponse> getRecruitQuestions(Long recruitId) {
+
+        List<RecruitContent> contents =
+                recruitContentRepository.findByRecruitIdOrderByPriorityAsc(recruitId);
+
+        List<RecruitQuestionResponse> responses = new ArrayList<>();
+
+        for (RecruitContent content : contents) {
+            responses.add(
+                    new RecruitQuestionResponse(
+                            content.getId(),
+                            content.getQuestion(),
+                            null
+                    )
+            );
+        }
+        return responses;
     }
 }

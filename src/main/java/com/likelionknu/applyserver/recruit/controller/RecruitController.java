@@ -3,6 +3,7 @@ package com.likelionknu.applyserver.recruit.controller;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailabilityResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
+import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResponse;
 import com.likelionknu.applyserver.recruit.service.RecruitService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,12 @@ public class RecruitController {
     }
 
     @GetMapping("/{id}/availability")
-    @Operation(summary = "모집공고 지원 가능 여부 조회")
-    public GlobalResponse<RecruitAvailabilityResponse> checkAvailability(@PathVariable Long recruitId) {
-        return GlobalResponse.ok(recruitService.checkAvailability(recruitId));
+    public GlobalResponse<RecruitAvailabilityResponse> checkAvailability(@PathVariable Long id) {
+        return GlobalResponse.ok(recruitService.checkAvailability(id));
+    }
+
+    @GetMapping("/{id}/questions")
+    public GlobalResponse<List<RecruitQuestionResponse>> getRecruitQuestions(@PathVariable Long id) {
+        return GlobalResponse.ok(recruitService.getRecruitQuestions(id));
     }
 }
