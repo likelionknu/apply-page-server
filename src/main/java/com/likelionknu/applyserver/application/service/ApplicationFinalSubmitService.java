@@ -6,15 +6,20 @@ import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.exception.*;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
+import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
+import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +33,7 @@ public class ApplicationFinalSubmitService {
     private final RecruitAnswerRepository recruitAnswerRepository;
     private final RecruitContentRepository recruitContentRepository;
     private final UserRepository userRepository;
+    private final RecruitRepository recruitRepository;
 
     public void finalSubmit(String email, FinalSubmitRequestDto request) {
         if (request.items() == null || request.items().isEmpty()) {
@@ -37,17 +43,45 @@ public class ApplicationFinalSubmitService {
         User user = userRepository.findOptionalByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException());
 
-        // TODO: 상세 프로필 작성 여부 검증
+        // 상세 프로필 검증
+        Profile profile = user.getProfile();
+        boolean profileCompleted =
+                profile != null &&
+                        profile.getStudentId() != null &&
+                        profile.getDepart() != null &&
+                        profile.getPhone() != null &&
+                        profile.getGrade() != null &&
+                        profile.getStatus() != null;
 
-        if (applicationRepository.findFirstByUserAndStatus(user, ApplicationStatus.SUBMITTED).isPresent()) {
+        if (!profileCompleted) {
+            throw new ProfileIncompleteException();
+        }
+
+        Long recruitId = request.recruitId();
+
+        if (applicationRepository.existsByUserIdAndRecruitIdAndStatus(
+                user.getId(), recruitId, ApplicationStatus.SUBMITTED
+        )) {
             throw new ApplicationAlreadySubmittedException();
         }
 
         Application application = applicationRepository
                 .findFirstByUserAndStatus(user, ApplicationStatus.DRAFT)
-                .orElseThrow(() -> new ApplicationDraftNotFoundException());
+                .orElseGet(() -> {
+                    Recruit recruit = recruitRepository.findById(recruitId)
+                            .orElseThrow(RecruitNotFoundException::new);
 
-        Long recruitId = application.getRecruit().getId();
+                    return applicationRepository.save(
+                            Application.builder()
+                                    .recruit(recruit)
+                                    .user(user)
+                                    .note("")
+                                    .evaluation(ApplicationEvaluation.HOLD)
+                                    .status(ApplicationStatus.DRAFT)
+                                    .submittedAt(LocalDateTime.now())
+                                    .build()
+                    );
+                });
 
         List<RecruitContent> requiredContents = recruitContentRepository
                 .findAllByRecruit_IdAndRequiredTrue(recruitId);
@@ -71,7 +105,7 @@ public class ApplicationFinalSubmitService {
             RecruitContent content = recruitContentRepository.findById(item.questionId())
                     .orElseThrow(() -> new RecruitContentNotFoundException());
 
-            if (!application.getRecruit().getId().equals(content.getRecruit().getId())) {
+            if (!recruitId.equals(content.getRecruit().getId())) {
                 throw new InvalidApplicationQuestionException();
             }
 

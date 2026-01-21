@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record FinalSubmitRequestDto(
+        @NotNull Long recruitId,
         @NotEmpty @Valid
         List<Item> items
 ) {
