@@ -4,10 +4,10 @@ import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitReque
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
+import com.likelionknu.applyserver.common.security.exception.AuthenticationInfoException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +32,14 @@ public class ApplicationController {
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
-            Authentication authentication,
             @RequestBody @Valid FinalSubmitRequestDto request
     ) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("인증이 필요합니다.");
+        String email = SecurityUtil.getUsername();
+        if (email == null || email.isBlank()) {
+            throw new AuthenticationInfoException();
         }
 
-        applicationFinalSubmitService.finalSubmit(authentication.getName(), request);
+        applicationFinalSubmitService.finalSubmit(email, request);
         return ResponseEntity.ok(GlobalResponse.ok());
     }
 
