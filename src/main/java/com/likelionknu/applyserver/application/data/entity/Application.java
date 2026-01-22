@@ -34,11 +34,9 @@ public class Application {
     private User user;
 
     @Lob
-    @Column(nullable = false)
     private String note;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ApplicationEvaluation evaluation;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +44,6 @@ public class Application {
     private ApplicationStatus status;
 
     @CreationTimestamp
-    @Column(name = "submitted_at", nullable = false, updatable = false)
+    @Column(name = "submitted_at")
     private LocalDateTime submittedAt;
 }
