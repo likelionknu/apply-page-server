@@ -8,7 +8,6 @@ import com.likelionknu.applyserver.application.data.repository.ApplicationReposi
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
-import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
@@ -29,6 +28,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Transactional
 public class ApplicationFinalSubmitService {
+
     private final ApplicationRepository applicationRepository;
     private final RecruitAnswerRepository recruitAnswerRepository;
     private final RecruitContentRepository recruitContentRepository;
@@ -41,9 +41,9 @@ public class ApplicationFinalSubmitService {
         }
 
         User user = userRepository.findOptionalByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(UserNotFoundException::new);
 
-        // 상세 프로필 검증
+        //상세 프로필 검증
         Profile profile = user.getProfile();
         boolean profileCompleted =
                 profile != null &&
@@ -75,10 +75,10 @@ public class ApplicationFinalSubmitService {
                             Application.builder()
                                     .recruit(recruit)
                                     .user(user)
-                                    .note("")
-                                    .evaluation(ApplicationEvaluation.HOLD)
+                                    .note(null)
+                                    .evaluation(null)
                                     .status(ApplicationStatus.DRAFT)
-                                    .submittedAt(LocalDateTime.now())
+                                    .submittedAt(null)
                                     .build()
                     );
                 });
@@ -100,10 +100,9 @@ public class ApplicationFinalSubmitService {
         recruitAnswerRepository.deleteByApplication_Id(application.getId());
 
         List<RecruitAnswer> answers = new ArrayList<>();
-
         for (FinalSubmitRequestDto.Item item : request.items()) {
             RecruitContent content = recruitContentRepository.findById(item.questionId())
-                    .orElseThrow(() -> new RecruitContentNotFoundException());
+                    .orElseThrow(RecruitContentNotFoundException::new);
 
             if (!recruitId.equals(content.getRecruit().getId())) {
                 throw new InvalidApplicationQuestionException();
@@ -117,6 +116,7 @@ public class ApplicationFinalSubmitService {
         }
 
         recruitAnswerRepository.saveAll(answers);
+        application.setSubmittedAt(LocalDateTime.now());
         application.setStatus(ApplicationStatus.SUBMITTED);
     }
 }
