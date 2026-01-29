@@ -42,6 +42,6 @@ public class Application {
     @Column(nullable = false)
     private ApplicationStatus status;
 
-    @Column(name = "submitted_at")
+    @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
 }

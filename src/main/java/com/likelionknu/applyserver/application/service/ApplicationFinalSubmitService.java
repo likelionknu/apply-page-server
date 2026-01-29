@@ -66,7 +66,7 @@ public class ApplicationFinalSubmitService {
         }
 
         Application application = applicationRepository
-                .findFirstByUserAndStatus(user, ApplicationStatus.DRAFT)
+                .findByUserIdAndRecruitIdAndStatus(user.getId(), recruitId, ApplicationStatus.DRAFT)
                 .orElseGet(() -> {
                     Recruit recruit = recruitRepository.findById(recruitId)
                             .orElseThrow(RecruitNotFoundException::new);
@@ -78,7 +78,7 @@ public class ApplicationFinalSubmitService {
                                     .note(null)
                                     .evaluation(null)
                                     .status(ApplicationStatus.DRAFT)
-                                    .submittedAt(null)
+                                    .submittedAt(LocalDateTime.now())
                                     .build()
                     );
                 });
