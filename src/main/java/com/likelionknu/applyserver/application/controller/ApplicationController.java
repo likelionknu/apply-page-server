@@ -1,7 +1,9 @@
 package com.likelionknu.applyserver.application.controller;
 
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
+import com.likelionknu.applyserver.application.data.dto.response.ApplicationSummaryResponse;
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
+import com.likelionknu.applyserver.application.service.ApplicationQueryService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.exception.AuthenticationInfoException;
@@ -29,6 +31,7 @@ public class ApplicationController {
     private final ApplicationService applicationService;
     private final UserRepository userRepository;
     private final ApplicationFinalSubmitService applicationFinalSubmitService;
+    private final ApplicationQueryService applicationQueryService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
@@ -57,5 +60,16 @@ public class ApplicationController {
 
         applicationService.saveDraft(user.getId(), id, requests);
         return GlobalResponse.ok(null);
+    }
+
+    @GetMapping
+    public ResponseEntity<GlobalResponse<List<ApplicationSummaryResponse>>> getMyApplications() {
+        String email = SecurityUtil.getUsername();
+        if (email == null || email.isBlank()) {
+            throw new AuthenticationInfoException();
+        }
+
+        List<ApplicationSummaryResponse> responses = applicationQueryService.getMyApplications(email);
+        return ResponseEntity.ok(GlobalResponse.ok(responses));
     }
 }
