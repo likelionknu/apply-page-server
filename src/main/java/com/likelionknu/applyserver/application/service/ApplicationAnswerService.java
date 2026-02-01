@@ -43,4 +43,8 @@ public class ApplicationAnswerService {
             recruitAnswerRepository.save(recruitAnswer);
         }
     }
+
+    public List<RecruitAnswer> getAnswers(Application application) {
+        return recruitAnswerRepository.findByApplication(application);
+    }
 }
