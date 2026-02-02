@@ -17,11 +17,9 @@ public class ApplicationCancelService {
     public void cancel(Long userId, Long recruitId) {
         Application application = applicationRepository
                 .findByUserIdAndRecruitIdAndStatus(
-                        userId, recruitId, ApplicationStatus.SUBMITTED
+                        userId, recruitId, ApplicationStatus.UNDER_DOCUMENT_REVIEW
                 )
-                .orElseThrow(() ->
-                        new IllegalStateException("회수 가능한 지원서가 없습니다.")
-                );
+                .orElseThrow(() -> new IllegalStateException("회수 가능한 지원서가 없습니다."));
 
         application.setStatus(ApplicationStatus.CANCELED);
     }
@@ -31,10 +29,8 @@ public class ApplicationCancelService {
                 .findByUserIdAndRecruitIdAndStatus(
                         userId, recruitId, ApplicationStatus.CANCELED
                 )
-                .orElseThrow(() ->
-                        new IllegalStateException("복구 가능한 지원서가 없습니다.")
-                );
+                .orElseThrow(() -> new IllegalStateException("복구 가능한 지원서가 없습니다."));
 
-        application.setStatus(ApplicationStatus.SUBMITTED);
+        application.setStatus(ApplicationStatus.UNDER_DOCUMENT_REVIEW);
     }
 }
