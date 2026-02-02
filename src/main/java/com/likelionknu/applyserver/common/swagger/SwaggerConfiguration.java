@@ -23,6 +23,10 @@ public class SwaggerConfiguration {
                 .url("http://localhost:8080")
                 .description("Local Server");
 
+        Server prodServer = new Server()
+                .url("https://api.likelionknu.com")
+                .description("Production Server");
+
         SecurityScheme securityScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
@@ -36,6 +40,7 @@ public class SwaggerConfiguration {
         return new OpenAPI()
                 .info(info)
                 .addServersItem(localServer)
+                .addServersItem(prodServer)
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME, securityScheme))
                 .addSecurityItem(securityRequirement);
