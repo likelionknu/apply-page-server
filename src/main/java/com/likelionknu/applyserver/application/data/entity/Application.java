@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -34,18 +33,15 @@ public class Application {
     private User user;
 
     @Lob
-    @Column(nullable = false)
     private String note;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ApplicationEvaluation evaluation;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApplicationStatus status;
 
-    @CreationTimestamp
-    @Column(name = "submitted_at", nullable = false, updatable = false)
+    @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
 }
