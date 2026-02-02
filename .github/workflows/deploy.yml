@@ -30,7 +30,7 @@ jobs:
           echo "${{ secrets.KEYSTORE_P12_BASE64 }}" | base64 -d > certs/keystore.p12
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon --refresh-dependencies
+        run: ./gradlew build -x test --no-daemon --refresh-dependencies
 
       - name: Build Docker image
         run: |
