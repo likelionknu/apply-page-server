@@ -3,6 +3,7 @@ package com.likelionknu.applyserver.application.controller;
 import com.likelionknu.applyserver.application.data.dto.request.ApplicationDraftSaveRequest;
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationSummaryResponse;
+import com.likelionknu.applyserver.application.service.ApplicationCancelService;
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationQueryService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
@@ -28,6 +29,7 @@ public class ApplicationController {
     private final UserRepository userRepository;
     private final ApplicationFinalSubmitService applicationFinalSubmitService;
     private final ApplicationQueryService applicationQueryService;
+    private final ApplicationCancelService applicationCancelService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
@@ -67,5 +69,43 @@ public class ApplicationController {
 
         List<ApplicationSummaryResponse> responses = applicationQueryService.getMyApplications(email);
         return ResponseEntity.ok(GlobalResponse.ok(responses));
+    }
+
+    @DeleteMapping("/{recruitId}/cancel")
+    @Operation(summary = "지원서 회수(지원 취소)")
+    public GlobalResponse<Void> cancelApplication(
+            @PathVariable Long recruitId
+    ) {
+        String email = SecurityUtil.getUsername();
+        if (email == null || email.isBlank()) {
+            throw new AuthenticationInfoException();
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        applicationCancelService.cancel(user.getId(), recruitId);
+        return GlobalResponse.ok(null);
+    }
+
+    @PostMapping("/{recruitId}/restore")
+    @Operation(summary = "지원서 회수 취소(상태 복원)")
+    public GlobalResponse<Void> restoreApplication(
+            @PathVariable Long recruitId
+    ) {
+        String email = SecurityUtil.getUsername();
+        if (email == null || email.isBlank()) {
+            throw new AuthenticationInfoException();
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        applicationCancelService.restore(user.getId(), recruitId);
+        return GlobalResponse.ok(null);
     }
 }
