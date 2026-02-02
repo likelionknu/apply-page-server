@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 public record ApplicationSummaryResponse(
         Long applicationId,
-        String recruitsTitle,
+        String recruitTitle,
         String status,
         LocalDateTime startAt,
         LocalDateTime endAt
-) {
-}
+) {}

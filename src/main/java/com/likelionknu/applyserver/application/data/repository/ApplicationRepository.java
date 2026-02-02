@@ -19,12 +19,15 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     boolean existsByUserIdAndRecruitIdAndStatusNot(Long userId, Long recruitId, ApplicationStatus status);
 
+    Optional<Application> findByUserIdAndRecruitId(Long userId, Long recruitId);
+
+    Optional<Application> findByIdAndUserId(Long id, Long userId);
 
     @Query("""
-    select a from Application a
-    join fetch a.recruit r
-    where a.user.id = :userId
-    order by a.submittedAt desc
-""")
+        select a from Application a
+        join fetch a.recruit r
+        where a.user.id = :userId
+        order by a.submittedAt desc
+    """)
     List<Application> findAllWithRecruitByUserId(@Param("userId") Long userId);
 }

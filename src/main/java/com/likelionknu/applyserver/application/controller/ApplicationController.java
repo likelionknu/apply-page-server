@@ -45,8 +45,8 @@ public class ApplicationController {
     @PutMapping("/drafts/{recruitId}")
     @Operation(summary = "지원서 임시 저장")
     public GlobalResponse<Long> saveDraft(
-        @PathVariable Long recruitId,
-        @RequestBody List<ApplicationDraftSaveRequest> requests
+            @PathVariable Long recruitId,
+            @RequestBody List<ApplicationDraftSaveRequest> requests
     ) {
         String email = SecurityUtil.getUsername();
         User user = userRepository.findByEmail(email);
@@ -55,7 +55,6 @@ public class ApplicationController {
         }
 
         Long applicationId = applicationService.saveDraft(user.getId(), recruitId, requests);
-
         return GlobalResponse.ok(applicationId);
     }
 
