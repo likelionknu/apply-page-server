@@ -10,6 +10,9 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
+import com.likelionknu.applyserver.mail.data.entity.MailContent;
+import com.likelionknu.applyserver.mail.service.MailService;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
@@ -34,6 +37,7 @@ public class ApplicationFinalSubmitService {
     private final RecruitContentRepository recruitContentRepository;
     private final UserRepository userRepository;
     private final RecruitRepository recruitRepository;
+    private final MailService mailService;
 
     public void finalSubmit(String email, FinalSubmitRequestDto request) {
         if (request.items() == null || request.items().isEmpty()) {
@@ -118,5 +122,29 @@ public class ApplicationFinalSubmitService {
         recruitAnswerRepository.saveAll(answers);
         application.setSubmittedAt(LocalDateTime.now());
         application.setStatus(ApplicationStatus.SUBMITTED);
+
+        List<MailContent> mailContentList = new ArrayList<>();
+        mailContentList.add(
+                MailContent.builder()
+                        .key("userName")
+                        .value(application.getUser().getName())
+                        .build()
+        );
+        mailContentList.add(
+                MailContent.builder()
+                        .key("part")
+                        .value(application.getRecruit().getTitle())
+                        .build()
+        );
+
+        mailService.sendMail(
+                MailRequestDto.builder()
+                        .user(null)
+                        .email(application.getUser().getEmail())
+                        .title("지원이 완료되었습니다!")
+                        .template("apply-success")
+                        .dataList(mailContentList)
+                        .build()
+        );
     }
 }
