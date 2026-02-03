@@ -24,7 +24,7 @@ public class MailHistory {
     private String subject;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY)
