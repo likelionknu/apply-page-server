@@ -20,17 +20,18 @@ public class MailHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String subject;
 
     @Lob
+    @Column(nullable = false)
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
+    @Column(nullable = false)
     private String recipient;
 
     @Column(name = "sent_at", nullable = false)
