@@ -30,4 +30,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
         order by a.submittedAt desc
     """)
     List<Application> findAllWithRecruitByUserId(@Param("userId") Long userId);
+
+
 }

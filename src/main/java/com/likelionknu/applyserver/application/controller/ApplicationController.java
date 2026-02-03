@@ -2,6 +2,7 @@ package com.likelionknu.applyserver.application.controller;
 
 import com.likelionknu.applyserver.application.data.dto.request.ApplicationDraftSaveRequest;
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
+import com.likelionknu.applyserver.application.data.dto.response.ApplicationDetailResponse;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationSummaryResponse;
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationQueryService;
@@ -67,5 +68,19 @@ public class ApplicationController {
 
         List<ApplicationSummaryResponse> responses = applicationQueryService.getMyApplications(email);
         return ResponseEntity.ok(GlobalResponse.ok(responses));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "지원서 상세 조회")
+    public ResponseEntity<GlobalResponse<ApplicationDetailResponse>> getApplicationDetail(
+            @PathVariable Long id
+    ) {
+        String email = SecurityUtil.getUsername();
+        if (email == null || email.isBlank()) {
+            throw new AuthenticationInfoException();
+        }
+
+        ApplicationDetailResponse response = applicationQueryService.getApplicationDetail(email, id);
+        return ResponseEntity.ok(GlobalResponse.ok(response));
     }
 }
