@@ -49,12 +49,7 @@ public class SecurityConfiguration {
 
         httpSecurity.authorizeHttpRequests(authorize ->
                 authorize.requestMatchers(
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/reissue",
-
-//                                디벨롭 과정 간 모든 접근 허용
-                                "/**",
-
+                                "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
