@@ -32,10 +32,11 @@ public class AdminController {
     }
 
     @GetMapping("/users")
+    @Operation(summary = "모든 사용자 목록 조회")
     public GlobalResponse<List<AdminUserResponseDto>> getAllUsers() {
         return GlobalResponse.ok(adminUserService.getAllUsers());
     }
-}
+
     @GetMapping("/recruits/{id}/notifications/document")
     @Operation(summary = "서류 합격 안내 메일 발송")
     public GlobalResponse<Void> sendDocumentResult(@PathVariable Long id) {
