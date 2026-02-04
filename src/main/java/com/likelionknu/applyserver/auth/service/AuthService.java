@@ -9,6 +9,9 @@ import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException;
 import com.likelionknu.applyserver.common.security.AuthenticationToken;
 import com.likelionknu.applyserver.common.security.JwtTokenProvider;
+import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
+import com.likelionknu.applyserver.mail.data.entity.MailContent;
+import com.likelionknu.applyserver.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -36,6 +36,7 @@ import java.util.*;
 public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MailService mailService;
 
     @Value("${google.client.id}")
     private String clientId;
@@ -128,6 +129,23 @@ public class AuthService {
         if(user == null) {
             log.info("[userSocialSignIn] 새로운 사용자: {}", googleProfile.getEmail());
             user = registerNewUser(googleProfile);
+            List<MailContent> mailContentList = new ArrayList<>();
+            mailContentList.add(
+                    MailContent.builder()
+                            .key("userName")
+                            .value(user.getName())
+                            .build()
+            );
+
+            mailService.sendMail(
+                    MailRequestDto.builder()
+                            .user(null)
+                            .email(user.getEmail())
+                            .title("회원가입 완료 안내")
+                            .template("register-success")
+                            .dataList(mailContentList)
+                            .build()
+            );
         } else {
             log.info("[userSocialSignIn] 기존 가입된 사용자: {}", googleProfile.getEmail());
         }
