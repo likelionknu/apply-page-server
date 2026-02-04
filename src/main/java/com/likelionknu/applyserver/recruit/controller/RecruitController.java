@@ -2,6 +2,7 @@ package com.likelionknu.applyserver.recruit.controller;
 
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailabilityResponse;
+import com.likelionknu.applyserver.recruit.data.dto.response.RecruitDetailResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResponse;
 import com.likelionknu.applyserver.recruit.service.RecruitService;
@@ -35,7 +36,7 @@ public class RecruitController {
 
     @GetMapping("/{id}/questions")
     @Operation(summary = "공고 질문 목록 조회")
-    public GlobalResponse<List<RecruitQuestionResponse>> getRecruitQuestions(@PathVariable Long id) {
+    public GlobalResponse<RecruitDetailResponse> getRecruitQuestions(@PathVariable Long id) {
         return GlobalResponse.ok(recruitService.getRecruitQuestions(id));
     }
 }
