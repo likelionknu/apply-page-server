@@ -1,8 +1,11 @@
 package com.likelionknu.applyserver.admin.controller;
 
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
+import com.likelionknu.applyserver.application.service.ApplicationMailService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
+import com.likelionknu.applyserver.common.security.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminController {
     private final ApplicationService applicationService;
+    private final ApplicationMailService applicationMailService;
 
     @GetMapping("/application/{id}")
+    @Operation(summary = "지원서 상세 정보 조회")
     public GlobalResponse<ApplicationInfoResponseDto> getApplicationInfo(@PathVariable Long id) {
         return GlobalResponse.ok(applicationService.getApplicationInfo(id));
+    }
+
+    @GetMapping("/recruits/{id}/notifications/document")
+    @Operation(summary = "서류 합격 안내 메일 발송")
+    public GlobalResponse<Void> sendDocumentResult(@PathVariable Long id) {
+        applicationMailService.sendDocumentResult(SecurityUtil.getUsername(), id);
+        return GlobalResponse.ok();
+    }
+
+    @GetMapping("/recruits/{id}/notifications/final")
+    @Operation(summary = "최종 합격 안내 메일 발송")
+    public GlobalResponse<Void> sendFinalResult(@PathVariable Long id) {
+        applicationMailService.sendFinalResult(SecurityUtil.getUsername(), id);
+        return GlobalResponse.ok();
     }
 }
