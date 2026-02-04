@@ -1,5 +1,7 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
+import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
 import com.likelionknu.applyserver.application.service.ApplicationMailService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
@@ -12,17 +14,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
+
     private final ApplicationService applicationService;
+    private final AdminUserService adminUserService;
     private final ApplicationMailService applicationMailService;
 
     @GetMapping("/application/{id}")
     @Operation(summary = "지원서 상세 정보 조회")
     public GlobalResponse<ApplicationInfoResponseDto> getApplicationInfo(@PathVariable Long id) {
         return GlobalResponse.ok(applicationService.getApplicationInfo(id));
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "모든 사용자 목록 조회")
+    public GlobalResponse<List<AdminUserResponseDto>> getAllUsers() {
+        return GlobalResponse.ok(adminUserService.getAllUsers());
     }
 
     @GetMapping("/recruits/{id}/notifications/document")
