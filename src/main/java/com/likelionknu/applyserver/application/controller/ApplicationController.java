@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/applications")
+@RequestMapping("/api/v1/applications")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
