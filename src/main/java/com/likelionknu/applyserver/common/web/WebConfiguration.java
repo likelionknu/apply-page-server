@@ -15,7 +15,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                         "https://apply-page-client.vercel.app",
                         "https://apply-page-admin.vercel.app"
                 )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
