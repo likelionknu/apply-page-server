@@ -97,7 +97,7 @@ public class AuthService {
 
     private Authentication createAuthentication(User user) {
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority(user.getRole().toString())
+                new SimpleGrantedAuthority("ROLE_" +user.getRole().toString())
         );
 
         return new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
