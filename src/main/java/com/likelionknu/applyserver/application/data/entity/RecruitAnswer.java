@@ -2,15 +2,13 @@ package com.likelionknu.applyserver.application.data.entity;
 
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "recruit_answer")
 public class RecruitAnswer {

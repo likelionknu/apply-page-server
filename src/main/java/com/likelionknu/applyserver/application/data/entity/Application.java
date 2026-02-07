@@ -5,17 +5,17 @@ import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "application")
 public class Application {
@@ -31,6 +31,12 @@ public class Application {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    // 사용자 삭제 시 함께 삭제되도록 하기 위한 연관관계
+    @OneToMany(mappedBy = "application",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<RecruitAnswer> answers = new ArrayList<>();
 
     @Column(name = "note", length = 100)
     private String note;
