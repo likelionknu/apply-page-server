@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
@@ -56,5 +57,11 @@ public class AdminController {
     public GlobalResponse<Void> deleteUser(@PathVariable Long id) {
         adminUserService.deleteUser(id);
         return GlobalResponse.ok();
+    }
+
+    @GetMapping("/users/{id}")
+    @Operation(summary = "특정 사용자 상세 정보 조회")
+    public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
+        return GlobalResponse.ok(adminUserService.getUserDetail(id));
     }
 }
