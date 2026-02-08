@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
@@ -10,11 +11,7 @@ import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -55,6 +52,13 @@ public class AdminController {
     @Operation(summary = "특정 사용자 강제 회원탈퇴")
     public GlobalResponse<Void> deleteUser(@PathVariable Long id) {
         adminUserService.deleteUser(id);
+        return GlobalResponse.ok();
+    }
+
+    @PatchMapping("/users/{id}/role")
+    @Operation(summary = "특정 사용자 권한 변경")
+    public GlobalResponse<Void> updateUserRole(@PathVariable Long id, @RequestBody AdminUserRoleUpdateRequest request) {
+        adminUserService.updateUserRole(id, request.getRole());
         return GlobalResponse.ok();
     }
 }
