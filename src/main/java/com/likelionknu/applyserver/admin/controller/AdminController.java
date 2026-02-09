@@ -1,7 +1,10 @@
 package com.likelionknu.applyserver.admin.controller;
 
 import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
+import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
+import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
+import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
 import com.likelionknu.applyserver.application.service.ApplicationMailService;
@@ -9,7 +12,7 @@ import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,7 @@ public class AdminController {
     private final ApplicationService applicationService;
     private final AdminUserService adminUserService;
     private final ApplicationMailService applicationMailService;
+    private final AdminApplicationService adminApplicationService;
 
     @GetMapping("/application/{id}")
     @Operation(summary = "지원서 상세 정보 조회")
@@ -59,6 +63,17 @@ public class AdminController {
     @Operation(summary = "특정 사용자 권한 변경")
     public GlobalResponse<Void> updateUserRole(@PathVariable Long id, @RequestBody AdminUserRoleUpdateRequest request) {
         adminUserService.updateUserRole(id, request.getRole());
+    @GetMapping("/users/{id}")
+    @Operation(summary = "특정 사용자 상세 정보 조회")
+    public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
+        return GlobalResponse.ok(adminUserService.getUserDetail(id));
+    @PostMapping("/applications/{id}/memos")
+    @Operation(summary = "운영진 메모 등록")
+    public GlobalResponse<Void> sendAdminMemo(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody AdminMemoRequestDto request
+    ) {
+        adminApplicationService.saveAdminMemo(id, request);
         return GlobalResponse.ok();
     }
 }

@@ -38,8 +38,12 @@ public class Application {
             orphanRemoval = true)
     private List<RecruitAnswer> answers = new ArrayList<>();
 
-    @Lob
+    @Column(name = "note", length = 100)
     private String note;
+
+    public void updateNote(String memo) {
+        this.note = memo;
+    }
 
     @Enumerated(EnumType.STRING)
     private ApplicationEvaluation evaluation;
@@ -50,4 +54,5 @@ public class Application {
 
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
+
 }

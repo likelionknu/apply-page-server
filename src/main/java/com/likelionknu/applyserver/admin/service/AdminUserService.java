@@ -1,6 +1,8 @@
 package com.likelionknu.applyserver.admin.service;
 
+import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
+import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.Role;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
@@ -38,6 +40,24 @@ public class AdminUserService {
         }
 
         return responses;
+    }
+
+    public AdminUserDetailResponse getUserDetail(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
+
+        Profile profile = user.getProfile();
+
+        return AdminUserDetailResponse.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .phone(profile != null ? profile.getPhone() : null)
+                .studentId(profile != null ? profile.getStudentId() : null)
+                .depart(profile != null ? profile.getDepart() : null)
+                .grade(profile != null ? profile.getGrade() : null)
+                .status(profile != null && profile.getStatus() != null ? profile.getStatus().name() : null)
+                .role(user.getRole().name())
+                .build();
     }
 
     @Transactional
