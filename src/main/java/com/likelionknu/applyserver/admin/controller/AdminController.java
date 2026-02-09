@@ -1,6 +1,8 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
+import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
 import com.likelionknu.applyserver.application.service.ApplicationMailService;
@@ -8,8 +10,10 @@ import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,7 @@ public class AdminController {
     private final ApplicationService applicationService;
     private final AdminUserService adminUserService;
     private final ApplicationMailService applicationMailService;
+    private final AdminApplicationService adminApplicationService;
 
     @GetMapping("/application/{id}")
     @Operation(summary = "지원서 상세 정보 조회")
@@ -55,6 +60,16 @@ public class AdminController {
     @Operation(summary = "특정 사용자 강제 회원탈퇴")
     public GlobalResponse<Void> deleteUser(@PathVariable Long id) {
         adminUserService.deleteUser(id);
+        return GlobalResponse.ok();
+    }
+
+    @PostMapping("/applications/{id}/memos")
+    @Operation(summary = "운영진 메모 등록")
+    public GlobalResponse<Void> sendAdminMemo(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody AdminMemoRequestDto request
+    ) {
+        adminApplicationService.saveAdminMemo(id, request);
         return GlobalResponse.ok();
     }
 }
