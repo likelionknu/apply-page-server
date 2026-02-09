@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
@@ -63,16 +65,18 @@ public class AdminController {
     @Operation(summary = "특정 사용자 권한 변경")
     public GlobalResponse<Void> updateUserRole(@PathVariable Long id, @RequestBody AdminUserRoleUpdateRequest request) {
         adminUserService.updateUserRole(id, request.getRole());
+        return GlobalResponse.ok();
+    }
+
     @GetMapping("/users/{id}")
     @Operation(summary = "특정 사용자 상세 정보 조회")
     public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
         return GlobalResponse.ok(adminUserService.getUserDetail(id));
+    }
+
     @PostMapping("/applications/{id}/memos")
     @Operation(summary = "운영진 메모 등록")
-    public GlobalResponse<Void> sendAdminMemo(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody AdminMemoRequestDto request
-    ) {
+    public GlobalResponse<Void> sendAdminMemo(@PathVariable("id") Long id, @Valid @RequestBody AdminMemoRequestDto request) {
         adminApplicationService.saveAdminMemo(id, request);
         return GlobalResponse.ok();
     }
