@@ -1,9 +1,11 @@
 package com.likelionknu.applyserver.admin.service;
 
 import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
+import com.likelionknu.applyserver.admin.data.dto.request.ApplicationStatusUpdateRequestDto;
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.exception.ApplicationNotFoundException;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
+import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,5 +24,14 @@ public class AdminApplicationService {
                 .orElseThrow(() -> new ApplicationNotFoundException());
 
         application.updateNote(request.getMemo());
+    }
+
+    @Transactional
+    public void updateStatus(Long applicationId, ApplicationStatus status) {
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException());
+
+        application.updateStatus(status);
     }
 }

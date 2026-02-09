@@ -52,6 +52,14 @@ public class Application {
     @Column(nullable = false)
     private ApplicationStatus status;
 
+    public void updateStatus(ApplicationStatus status) {
+        this.status = status;
+        resetEvaluation();
+    }
+    public void resetEvaluation() {
+        this.evaluation = ApplicationEvaluation.HOLD;
+    }
+
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
 
