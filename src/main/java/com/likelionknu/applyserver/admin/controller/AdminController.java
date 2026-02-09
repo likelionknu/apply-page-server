@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
@@ -14,12 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -64,6 +59,10 @@ public class AdminController {
         return GlobalResponse.ok();
     }
 
+    @PatchMapping("/users/{id}/role")
+    @Operation(summary = "특정 사용자 권한 변경")
+    public GlobalResponse<Void> updateUserRole(@PathVariable Long id, @RequestBody AdminUserRoleUpdateRequest request) {
+        adminUserService.updateUserRole(id, request.getRole());
     @GetMapping("/users/{id}")
     @Operation(summary = "특정 사용자 상세 정보 조회")
     public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {

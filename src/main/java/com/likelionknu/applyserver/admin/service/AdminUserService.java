@@ -4,6 +4,7 @@ import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailRespon
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.data.enums.Role;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
@@ -64,5 +65,14 @@ public class AdminUserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public void updateUserRole(Long userId, String role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
+
+        Role newRole = Role.valueOf(role);
+        user.setRole(newRole);
     }
 }
