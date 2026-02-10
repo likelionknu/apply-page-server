@@ -3,6 +3,7 @@ package com.likelionknu.applyserver.admin.controller;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
+import com.likelionknu.applyserver.admin.data.dto.request.ApplicationStatusUpdateRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -38,6 +41,29 @@ public class AdminController {
         return GlobalResponse.ok(adminUserService.getAllUsers());
     }
 
+    @GetMapping("/users/{id}")
+    @Operation(summary = "특정 사용자 상세 정보 조회")
+    public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
+        return GlobalResponse.ok(adminUserService.getUserDetail(id));
+    }
+
+    @DeleteMapping("/users/{id}")
+    @Operation(summary = "특정 사용자 강제 회원탈퇴")
+    public GlobalResponse<Void> deleteUser(@PathVariable Long id) {
+        adminUserService.deleteUser(id);
+        return GlobalResponse.ok();
+    }
+
+    @PatchMapping("/users/{id}/role")
+    @Operation(summary = "특정 사용자 권한 변경")
+    public GlobalResponse<Void> updateUserRole(
+            @PathVariable Long id,
+            @RequestBody AdminUserRoleUpdateRequest request
+    ) {
+        adminUserService.updateUserRole(id, request.getRole());
+        return GlobalResponse.ok();
+    }
+
     @GetMapping("/recruits/{id}/notifications/document")
     @Operation(summary = "서류 합격 안내 메일 발송")
     public GlobalResponse<Void> sendDocumentResult(@PathVariable Long id) {
@@ -52,28 +78,23 @@ public class AdminController {
         return GlobalResponse.ok();
     }
 
-    @DeleteMapping("/users/{id}")
-    @Operation(summary = "특정 사용자 강제 회원탈퇴")
-    public GlobalResponse<Void> deleteUser(@PathVariable Long id) {
-        adminUserService.deleteUser(id);
+    @PostMapping("/applications/{id}/memos")
+    @Operation(summary = "운영진 메모 등록")
+    public GlobalResponse<Void> sendAdminMemo(
+            @PathVariable Long id,
+            @Valid @RequestBody AdminMemoRequestDto request
+    ) {
+        adminApplicationService.saveAdminMemo(id, request);
         return GlobalResponse.ok();
     }
 
-    @PatchMapping("/users/{id}/role")
-    @Operation(summary = "특정 사용자 권한 변경")
-    public GlobalResponse<Void> updateUserRole(@PathVariable Long id, @RequestBody AdminUserRoleUpdateRequest request) {
-        adminUserService.updateUserRole(id, request.getRole());
-        @GetMapping("/users/{id}")
-        @Operation(summary = "특정 사용자 상세 정보 조회")
-        public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
-            return GlobalResponse.ok(adminUserService.getUserDetail(id));
-            @PostMapping("/applications/{id}/memos")
-            @Operation(summary = "운영진 메모 등록")
-            public GlobalResponse<Void> sendAdminMemo(
-                    @PathVariable("id") Long id,
-                    @Valid @RequestBody AdminMemoRequestDto request
+    @PatchMapping("/applications/{id}")
+    @Operation(summary = "특정 지원서 상태 & 평가 변경")
+    public GlobalResponse<Void> updateApplicationStatus(
+            @PathVariable Long id,
+            @RequestBody ApplicationStatusUpdateRequestDto request
     ) {
-                adminApplicationService.saveAdminMemo(id, request);
-                return GlobalResponse.ok();
-            }
-        }
+        adminApplicationService.patch(id, request);
+        return GlobalResponse.ok();
+    }
+}
