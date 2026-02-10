@@ -83,12 +83,12 @@ public class AdminController {
     }
 
     @PatchMapping("/applications/{id}")
-    @Operation(summary = "특정 지원서 상태 변경")
+    @Operation(summary = "특정 지원서 상태 & 평가 변경")
     public GlobalResponse<Void> updateApplicationStatus(
             @PathVariable Long id,
-            @RequestBody @Valid ApplicationStatusUpdateRequestDto request
+            @RequestBody ApplicationStatusUpdateRequestDto request
     ){
-        adminApplicationService.updateStatus(id, request.status());
+        adminApplicationService.patch(id, request);
         return GlobalResponse.ok();
     }
 }

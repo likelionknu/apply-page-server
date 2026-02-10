@@ -48,6 +48,10 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private ApplicationEvaluation evaluation;
 
+    public void updateEvaluation(ApplicationEvaluation evaluation) {
+        this.evaluation = evaluation;
+    }
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApplicationStatus status;
