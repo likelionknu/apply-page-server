@@ -60,6 +60,7 @@ public class ApplicationQueryService {
 
         return new ApplicationDetailResponse(
                 application.getId(),
+                application.getRecruit().getId(),
                 application.getRecruit().getTitle(),
                 application.getStatus().name(),
                 application.getRecruit().getStartAt(),
