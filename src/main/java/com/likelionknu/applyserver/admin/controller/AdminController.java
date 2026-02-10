@@ -3,6 +3,7 @@ package com.likelionknu.applyserver.admin.controller;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
+import com.likelionknu.applyserver.admin.data.dto.request.ApplicationStatusUpdateRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
@@ -78,6 +79,16 @@ public class AdminController {
     @Operation(summary = "운영진 메모 등록")
     public GlobalResponse<Void> sendAdminMemo(@PathVariable("id") Long id, @Valid @RequestBody AdminMemoRequestDto request) {
         adminApplicationService.saveAdminMemo(id, request);
+        return GlobalResponse.ok();
+    }
+
+    @PatchMapping("/applications/{id}")
+    @Operation(summary = "특정 지원서 상태 변경")
+    public GlobalResponse<Void> updateApplicationStatus(
+            @PathVariable Long id,
+            @RequestBody @Valid ApplicationStatusUpdateRequestDto request
+    ){
+        adminApplicationService.updateStatus(id, request.status());
         return GlobalResponse.ok();
     }
 }
