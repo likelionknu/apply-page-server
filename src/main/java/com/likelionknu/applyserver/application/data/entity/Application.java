@@ -52,6 +52,10 @@ public class Application {
     @Column(nullable = false)
     private ApplicationStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "before_canceled_status")
+    private ApplicationStatus beforeCanceledStatus;
+
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
 
