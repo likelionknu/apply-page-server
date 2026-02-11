@@ -1,6 +1,8 @@
 package com.likelionknu.applyserver.admin.service;
 
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitDetailResponse;
+import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse;
+import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
@@ -18,6 +20,7 @@ public class AdminRecruitService {
 
     private final RecruitRepository recruitRepository;
     private final RecruitContentRepository recruitContentRepository;
+    private final ApplicationRepository applicationRepository;
 
     public AdminRecruitDetailResponse getRecruitDetail(Long recruitId) {
         Recruit recruit = recruitRepository.findById(recruitId)
@@ -36,5 +39,8 @@ public class AdminRecruitService {
                 .endAt(recruit.getEndAt())
                 .questions(questions)
                 .build();
+    }
+    public List<AdminRecruitSummaryResponse> getRecruitSummaries() {
+        return applicationRepository.findRecruitSummary();
     }
 }
