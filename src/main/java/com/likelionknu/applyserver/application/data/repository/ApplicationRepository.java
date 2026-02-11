@@ -54,4 +54,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
         order by r.startAt desc
     """)
     List<AdminRecruitSummaryResponse> findRecruitSummary();
+
+    @Query("""
+    select a from Application a
+    join fetch a.user u
+    left join fetch u.profile p
+    join fetch a.recruit r
+    where r.id = :recruitId
+    order by
+        case when a.submittedAt is null then 1 else 0 end,
+        a.submittedAt desc,
+        a.id desc
+""")
+    List<Application> findAllByRecruitIdWithUserProfile(@Param("recruitId") Long recruitId);
 }
