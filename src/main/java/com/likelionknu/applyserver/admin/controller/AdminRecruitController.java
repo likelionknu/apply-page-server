@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.admin.controller;
 
+import com.likelionknu.applyserver.admin.data.dto.request.AdminRecruitUpdateRequest;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitApplicationResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse;
@@ -20,7 +21,6 @@ public class AdminRecruitController {
     private final AdminRecruitService adminRecruitService;
     private final AdminRecruitApplicationService adminRecruitApplicationService;
 
-
     @GetMapping("/{id}")
     @Operation(summary = "모집 공고 상세 정보 조회")
     public GlobalResponse<AdminRecruitDetailResponse> getRecruitDetail(@PathVariable Long id) {
@@ -33,12 +33,19 @@ public class AdminRecruitController {
         return GlobalResponse.ok(adminRecruitService.getRecruitSummaries());
     }
 
-
     @GetMapping("/{id}/applications")
     @Operation(summary = "모집 공고에 등록된 전체 지원서 조회")
-    public GlobalResponse<List<AdminRecruitApplicationResponse>> getRecruitApplications(
-            @PathVariable Long id
-    ) {
+    public GlobalResponse<List<AdminRecruitApplicationResponse>> getRecruitApplications(@PathVariable Long id) {
         return GlobalResponse.ok(adminRecruitApplicationService.getApplicationsByRecruit(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "특정 모집 공고 수정")
+    public GlobalResponse<Void> updateRecruit(
+            @PathVariable Long id,
+            @RequestBody AdminRecruitUpdateRequest request
+    ) {
+        adminRecruitService.updateRecruit(id, request);
+        return GlobalResponse.ok();
     }
 }

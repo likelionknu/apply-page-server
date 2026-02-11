@@ -19,6 +19,13 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     boolean existsByUserIdAndRecruitIdAndStatus(Long userId, Long recruitId, ApplicationStatus status);
 
+    @Query("""
+        select (count(a) > 0)
+        from Application a
+        where a.recruit.id = :recruitId
+    """)
+    boolean existsByRecruitId(@Param("recruitId") Long recruitId);
+
     boolean existsByUserIdAndRecruitIdAndStatusNot(Long userId, Long recruitId, ApplicationStatus status);
 
     Optional<Application> findByUserIdAndRecruitId(Long userId, Long recruitId);
@@ -56,15 +63,15 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<AdminRecruitSummaryResponse> findRecruitSummary();
 
     @Query("""
-    select a from Application a
-    join fetch a.user u
-    left join fetch u.profile p
-    join fetch a.recruit r
-    where r.id = :recruitId
-    order by
-        case when a.submittedAt is null then 1 else 0 end,
-        a.submittedAt desc,
-        a.id desc
-""")
+        select a from Application a
+        join fetch a.user u
+        left join fetch u.profile p
+        join fetch a.recruit r
+        where r.id = :recruitId
+        order by
+            case when a.submittedAt is null then 1 else 0 end,
+            a.submittedAt desc,
+            a.id desc
+    """)
     List<Application> findAllByRecruitIdWithUserProfile(@Param("recruitId") Long recruitId);
 }
