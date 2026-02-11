@@ -48,4 +48,10 @@ public class AdminRecruitController {
         adminRecruitService.updateRecruit(id, request);
         return GlobalResponse.ok();
     }
+
+    @DeleteMapping("/{id}")
+    public GlobalResponse<Void> deleteRecruit(@PathVariable Long id) {
+        adminRecruitService.deleteRecruit(id);
+        return GlobalResponse.ok();
+    }
 }
