@@ -65,4 +65,11 @@ public class AdminApplicationService {
             updateEvaluation(applicationId, request.evaluation());
         }
     }
+
+    public void deleteAdminApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException());
+
+        applicationRepository.delete(application);
+    }
 }
