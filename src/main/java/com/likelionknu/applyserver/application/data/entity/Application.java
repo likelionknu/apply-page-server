@@ -56,15 +56,19 @@ public class Application {
     @Column(nullable = false)
     private ApplicationStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "before_canceled_status")
+    private ApplicationStatus beforeCanceledStatus;
+
     public void updateStatus(ApplicationStatus status) {
         this.status = status;
         resetEvaluation();
     }
+
     public void resetEvaluation() {
         this.evaluation = ApplicationEvaluation.HOLD;
     }
 
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
-
 }
