@@ -94,7 +94,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/{recruitId}/cancel")
-    @Operation(summary = "지원서 회수(지원 취소) - UNDER_DOCUMENT_REVIEW → CANCELED")
+    @Operation(summary = "지원서 회수 (DRAFT / SUBMITTED 제외 → CANCELED)")
     public GlobalResponse<Void> cancelApplication(
             @PathVariable Long recruitId
     ) {
@@ -113,7 +113,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/{recruitId}/restore")
-    @Operation(summary = "지원서 회수 취소(상태 복원) - CANCELED → UNDER_DOCUMENT_REVIEW")
+    @Operation(summary = "지원서 회수 취소 (CANCELED → 취소 직전 상태)")
     public GlobalResponse<Void> restoreApplication(
             @PathVariable Long recruitId
     ) {

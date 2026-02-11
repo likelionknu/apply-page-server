@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ApplicationDetailResponse {
     private Long applicationId;
+    private Long recruitId;
     private String recruitTitle;
     private String status;
     private LocalDateTime startAt;

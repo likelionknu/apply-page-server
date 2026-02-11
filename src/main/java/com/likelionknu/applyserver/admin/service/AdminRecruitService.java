@@ -4,7 +4,6 @@ import com.likelionknu.applyserver.admin.data.dto.request.AdminRecruitUpdateRequ
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
-import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
@@ -46,10 +45,7 @@ public class AdminRecruitService {
     }
 
     public List<AdminRecruitSummaryResponse> getRecruitSummaries() {
-        return applicationRepository.findRecruitSummary(
-                ApplicationStatus.SUBMITTED,
-                ApplicationStatus.DRAFT
-        );
+        return applicationRepository.findRecruitSummary();
     }
 
     @Transactional
@@ -83,36 +79,18 @@ public class AdminRecruitService {
     }
 
     private void validateUpdateRequest(AdminRecruitUpdateRequest request) {
-        if (request == null) {
-            throw new IllegalStateException("요청 값이 비어있습니다.");
-        }
-        if (request.title() == null || request.title().isBlank()) {
-            throw new IllegalStateException("title은 필수입니다.");
-        }
-        if (request.startAt() == null || request.endAt() == null) {
-            throw new IllegalStateException("start_at, end_at은 필수입니다.");
-        }
-        if (request.startAt().isAfter(request.endAt())) {
-            throw new IllegalStateException("start_at은 end_at보다 이후일 수 없습니다.");
-        }
-        if (request.questions() == null || request.questions().isEmpty()) {
-            throw new IllegalStateException("questions는 최소 1개 이상이어야 합니다.");
-        }
+        if (request == null) throw new IllegalStateException("요청 값이 비어있습니다.");
+        if (request.title() == null || request.title().isBlank()) throw new IllegalStateException("title은 필수입니다.");
+        if (request.startAt() == null || request.endAt() == null) throw new IllegalStateException("start_at, end_at은 필수입니다.");
+        if (request.startAt().isAfter(request.endAt())) throw new IllegalStateException("start_at은 end_at보다 이후일 수 없습니다.");
+        if (request.questions() == null || request.questions().isEmpty()) throw new IllegalStateException("questions는 최소 1개 이상이어야 합니다.");
 
         Set<Integer> priorities = new HashSet<>();
         for (AdminRecruitUpdateRequest.Item item : request.questions()) {
-            if (item == null) {
-                throw new IllegalStateException("questions 항목이 비어있습니다.");
-            }
-            if (item.question() == null || item.question().isBlank()) {
-                throw new IllegalStateException("question은 필수입니다.");
-            }
-            if (item.priority() == null) {
-                throw new IllegalStateException("priority는 필수입니다.");
-            }
-            if (!priorities.add(item.priority())) {
-                throw new IllegalStateException("priority가 중복되었습니다: " + item.priority());
-            }
+            if (item == null) throw new IllegalStateException("questions 항목이 비어있습니다.");
+            if (item.question() == null || item.question().isBlank()) throw new IllegalStateException("question은 필수입니다.");
+            if (item.priority() == null) throw new IllegalStateException("priority는 필수입니다.");
+            if (!priorities.add(item.priority())) throw new IllegalStateException("priority가 중복되었습니다: " + item.priority());
         }
     }
 }

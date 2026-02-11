@@ -21,7 +21,6 @@ public class AdminRecruitController {
     private final AdminRecruitService adminRecruitService;
     private final AdminRecruitApplicationService adminRecruitApplicationService;
 
-
     @GetMapping("/{id}")
     @Operation(summary = "모집 공고 상세 정보 조회")
     public GlobalResponse<AdminRecruitDetailResponse> getRecruitDetail(@PathVariable Long id) {
@@ -34,12 +33,9 @@ public class AdminRecruitController {
         return GlobalResponse.ok(adminRecruitService.getRecruitSummaries());
     }
 
-
     @GetMapping("/{id}/applications")
     @Operation(summary = "모집 공고에 등록된 전체 지원서 조회")
-    public GlobalResponse<List<AdminRecruitApplicationResponse>> getRecruitApplications(
-            @PathVariable Long id
-    ) {
+    public GlobalResponse<List<AdminRecruitApplicationResponse>> getRecruitApplications(@PathVariable Long id) {
         return GlobalResponse.ok(adminRecruitApplicationService.getApplicationsByRecruit(id));
     }
 
