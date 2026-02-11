@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +44,6 @@ public class ApplicationFinalSubmitService {
         User user = userRepository.findOptionalByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        //상세 프로필 검증
         Profile profile = user.getProfile();
         boolean profileCompleted =
                 profile != null &&
@@ -63,32 +59,32 @@ public class ApplicationFinalSubmitService {
 
         Long recruitId = request.recruitId();
 
-        if (applicationRepository.existsByUserIdAndRecruitIdAndStatus(
-                user.getId(), recruitId, ApplicationStatus.SUBMITTED
-        )) {
-            throw new ApplicationAlreadySubmittedException();
+        Optional<Application> existingOpt = applicationRepository.findByUserIdAndRecruitId(user.getId(), recruitId);
+        if (existingOpt.isPresent()) {
+            Application existing = existingOpt.get();
+            if (existing.getStatus() != ApplicationStatus.DRAFT) {
+                throw new IllegalStateException("이미 제출되었거나 처리 중인 지원서는 최종 제출을 다시 할 수 없습니다. 회수 취소(restore)만 가능합니다.");
+            }
         }
 
-        Application application = applicationRepository
-                .findByUserIdAndRecruitIdAndStatus(user.getId(), recruitId, ApplicationStatus.DRAFT)
-                .orElseGet(() -> {
-                    Recruit recruit = recruitRepository.findById(recruitId)
-                            .orElseThrow(RecruitNotFoundException::new);
+        Application application = existingOpt.orElseGet(() -> {
+            Recruit recruit = recruitRepository.findById(recruitId)
+                    .orElseThrow(RecruitNotFoundException::new);
 
-                    return applicationRepository.save(
-                            Application.builder()
-                                    .recruit(recruit)
-                                    .user(user)
-                                    .note(null)
-                                    .evaluation(null)
-                                    .status(ApplicationStatus.DRAFT)
-                                    .submittedAt(LocalDateTime.now())
-                                    .build()
-                    );
-                });
+            return applicationRepository.save(
+                    Application.builder()
+                            .recruit(recruit)
+                            .user(user)
+                            .note(null)
+                            .evaluation(null)
+                            .status(ApplicationStatus.DRAFT)
+                            .submittedAt(LocalDateTime.now())
+                            .build()
+            );
+        });
 
-        List<RecruitContent> requiredContents = recruitContentRepository
-                .findAllByRecruit_IdAndRequiredTrue(recruitId);
+        List<RecruitContent> requiredContents =
+                recruitContentRepository.findAllByRecruit_IdAndRequiredTrue(recruitId);
 
         Set<Long> submittedQuestionIds = new HashSet<>();
         for (FinalSubmitRequestDto.Item item : request.items()) {
