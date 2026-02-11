@@ -9,7 +9,7 @@ public record AdminRecruitSummaryResponse(
         String title,
         @JsonProperty("start_at") LocalDateTime startAt,
         @JsonProperty("end_at") LocalDateTime endAt,
-        int submit,
-        int draft
+        Long submit,
+        Long draft
 ) {
 }
