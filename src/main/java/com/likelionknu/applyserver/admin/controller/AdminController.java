@@ -91,4 +91,11 @@ public class AdminController {
         adminApplicationService.patch(id, request);
         return GlobalResponse.ok();
     }
+
+    @DeleteMapping("/applications/{id}")
+    @Operation(summary = "특정 지원서 강제 삭제")
+    public GlobalResponse<Void> deleteAdminApplication(@PathVariable Long id) {
+        adminApplicationService.deleteAdminApplication(id);
+        return GlobalResponse.ok();
+    }
 }
