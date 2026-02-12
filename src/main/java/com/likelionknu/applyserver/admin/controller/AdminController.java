@@ -29,7 +29,7 @@ public class AdminController {
     private final ApplicationMailService applicationMailService;
     private final AdminApplicationService adminApplicationService;
 
-    @GetMapping("/application/{id}")
+    @GetMapping("/applications/{id}")
     @Operation(summary = "지원서 상세 정보 조회")
     public GlobalResponse<ApplicationInfoResponseDto> getApplicationInfo(@PathVariable Long id) {
         return GlobalResponse.ok(applicationService.getApplicationInfo(id));
