@@ -21,6 +21,13 @@ public class AdminRecruitController {
     private final AdminRecruitService adminRecruitService;
     private final AdminRecruitApplicationService adminRecruitApplicationService;
 
+    @PostMapping
+    @Operation(summary = "모집 공고 등록")
+    public GlobalResponse<Void> createRecruit(@RequestBody AdminRecruitUpdateRequest request) {
+        adminRecruitService.createRecruit(request);
+        return GlobalResponse.ok();
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "모집 공고 상세 정보 조회")
     public GlobalResponse<AdminRecruitDetailResponse> getRecruitDetail(@PathVariable Long id) {
