@@ -51,6 +51,31 @@ public class AdminRecruitService {
     }
 
     @Transactional
+    public void createRecruit(AdminRecruitUpdateRequest request) {
+        validateUpdateRequest(request);
+
+        Recruit recruit = Recruit.builder()
+                .title(request.title())
+                .startAt(request.startAt())
+                .endAt(request.endAt())
+                .build();
+
+        recruitRepository.save(recruit);
+
+        List<RecruitContent> recruitContentList = request.questions().stream()
+                .map(q -> RecruitContent.builder()
+                        .recruit(recruit)
+                        .question(q.question())
+                        .priority(q.priority())
+                        .required(true)
+                        .build()
+                )
+                .toList();
+
+        recruitContentRepository.saveAll(recruitContentList);
+    }
+
+    @Transactional
     public void updateRecruit(Long recruitId, AdminRecruitUpdateRequest request) {
         validateUpdateRequest(request);
 
