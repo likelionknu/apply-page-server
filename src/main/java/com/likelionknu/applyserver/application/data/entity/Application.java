@@ -68,21 +68,38 @@ public class Application {
         if (newStatus == ApplicationStatus.CANCELED && this.status != ApplicationStatus.CANCELED) {
             this.beforeCanceledStatus = this.status;
             this.status = ApplicationStatus.CANCELED;
+            resetEvaluation();
             return;
         }
 
-        this.status = newStatus;
+        if (this.status == ApplicationStatus.CANCELED && newStatus != ApplicationStatus.CANCELED) {
+            this.status = newStatus;
+            this.beforeCanceledStatus = null;
+            resetEvaluation();
+            return;
+        }
+
+        if (this.status != newStatus) {
+            this.status = newStatus;
+            resetEvaluation();
+        }
     }
 
     public void restoreFromCanceled() {
         if (this.status != ApplicationStatus.CANCELED) {
             throw new IllegalStateException("CANCELED 상태가 아닙니다.");
         }
+
         if (this.beforeCanceledStatus == null) {
             throw new IllegalStateException("복구할 이전 상태 정보가 없습니다.");
         }
 
         this.status = this.beforeCanceledStatus;
         this.beforeCanceledStatus = null;
+        resetEvaluation();
+    }
+
+    private void resetEvaluation() {
+        this.evaluation = ApplicationEvaluation.HOLD;
     }
 }

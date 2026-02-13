@@ -44,7 +44,7 @@ public class ApplicationService {
                     Application newApp = new Application();
                     newApp.setUser(user);
                     newApp.setRecruit(recruit);
-                    newApp.setStatus(ApplicationStatus.DRAFT);
+                    newApp.changeStatus(ApplicationStatus.DRAFT);
                     newApp.setSubmittedAt(LocalDateTime.now());
                     return applicationRepository.save(newApp);
                 });

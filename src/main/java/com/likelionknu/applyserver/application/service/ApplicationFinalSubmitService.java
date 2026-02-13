@@ -117,7 +117,7 @@ public class ApplicationFinalSubmitService {
 
         recruitAnswerRepository.saveAll(answers);
         application.setSubmittedAt(LocalDateTime.now());
-        application.setStatus(ApplicationStatus.SUBMITTED);
+        application.changeStatus(ApplicationStatus.SUBMITTED);
 
         List<MailContent> mailContentList = new ArrayList<>();
         mailContentList.add(
