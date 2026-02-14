@@ -17,6 +17,9 @@ public class TokenResponseDto {
     @JsonProperty("refresh_token")
     private String refreshToken;
 
+    @JsonProperty("is_new_user")
+    private boolean isNewUser;
+
     private String name;
     private String role;
 }
