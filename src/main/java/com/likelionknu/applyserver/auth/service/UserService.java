@@ -108,7 +108,7 @@ public class UserService {
         List<Application> applicationList = applicationRepository.findAllByUser(user);
 
         for(Application application : applicationList) {
-            List<RecruitAnswer> recruitAnswerList = recruitAnswerRepository.findByApplication(application);
+            List<RecruitAnswer> recruitAnswerList = recruitAnswerRepository.findAllByApplication(application);
             recruitAnswerRepository.deleteAll(recruitAnswerList);
         }
 
