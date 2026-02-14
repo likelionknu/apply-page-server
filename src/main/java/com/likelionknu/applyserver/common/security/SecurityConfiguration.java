@@ -77,6 +77,7 @@ public class SecurityConfiguration {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://likelionknu.com",
+                "https://www.likelionknu.com",
                 "https://apply-page-client.vercel.app",
                 "https://apply-page-admin.vercel.app"
         ));
