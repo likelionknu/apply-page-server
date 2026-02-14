@@ -8,7 +8,6 @@ import com.likelionknu.applyserver.application.service.ApplicationCancelService;
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationQueryService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
-import com.likelionknu.applyserver.application.service.ApplicationUnsubmitService;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
@@ -32,7 +31,6 @@ public class ApplicationController {
     private final ApplicationFinalSubmitService applicationFinalSubmitService;
     private final ApplicationQueryService applicationQueryService;
     private final ApplicationCancelService applicationCancelService;
-    private final ApplicationUnsubmitService applicationUnsubmitService;
 
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> finalSubmit(
@@ -48,7 +46,7 @@ public class ApplicationController {
     }
 
     @PutMapping("/drafts/{recruitId}")
-    @Operation(summary = "지원서 임시 저장")
+    @Operation(summary = "지원서 임시 저장 (DRAFT 상태에서만 가능)")
     public GlobalResponse<Long> saveDraft(
             @PathVariable Long recruitId,
             @RequestBody List<ApplicationDraftSaveRequest> requests
@@ -94,7 +92,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/{recruitId}/cancel")
-    @Operation(summary = "지원서 회수 (DRAFT / SUBMITTED 제외 → CANCELED)")
+    @Operation(summary = "지원서 회수(지원 취소) - 모든 상태 → CANCELED")
     public GlobalResponse<Void> cancelApplication(
             @PathVariable Long recruitId
     ) {
@@ -113,7 +111,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/{recruitId}/restore")
-    @Operation(summary = "지원서 회수 취소 (CANCELED → 취소 직전 상태)")
+    @Operation(summary = "지원서 회수 취소(상태 복원) - CANCELED → beforeCanceledStatus")
     public GlobalResponse<Void> restoreApplication(
             @PathVariable Long recruitId
     ) {
@@ -128,25 +126,6 @@ public class ApplicationController {
         }
 
         applicationCancelService.restore(user.getId(), recruitId);
-        return GlobalResponse.ok(null);
-    }
-
-    @PostMapping("/{recruitId}/unsubmit")
-    @Operation(summary = "제출 취소 (SUBMITTED → DRAFT)")
-    public GlobalResponse<Void> unsubmitApplication(
-            @PathVariable Long recruitId
-    ) {
-        String email = SecurityUtil.getUsername();
-        if (email == null || email.isBlank()) {
-            throw new AuthenticationInfoException();
-        }
-
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-        }
-
-        applicationUnsubmitService.unsubmit(user.getId(), recruitId);
         return GlobalResponse.ok(null);
     }
 }

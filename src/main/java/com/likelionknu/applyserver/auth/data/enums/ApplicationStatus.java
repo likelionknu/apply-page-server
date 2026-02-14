@@ -11,5 +11,13 @@ public enum ApplicationStatus {
     UNDER_INTERVIEW_REVIEW,
     FAIL_INTERVIEW,
     FINAL_PASSED,
-    CANCELED
+    CANCELED;
+
+    public boolean isAfterFinalSubmit() {
+        return this != DRAFT && this != CANCELED;
+    }
+
+    public boolean isUserLocked() {
+        return this != DRAFT;
+    }
 }

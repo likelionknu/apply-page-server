@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 public class AdminApplicationService {
@@ -21,54 +20,44 @@ public class AdminApplicationService {
 
     @Transactional
     public void saveAdminMemo(Long applicationId, AdminMemoRequestDto request) {
-
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationNotFoundException());
+                .orElseThrow(ApplicationNotFoundException::new);
 
         application.updateNote(request.getMemo());
     }
 
     @Transactional
     public void updateStatus(Long applicationId, ApplicationStatus status) {
-
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationNotFoundException());
+                .orElseThrow(ApplicationNotFoundException::new);
 
-        application.updateStatus(status);
+        application.changeStatus(status);
     }
 
     @Transactional
     public void updateEvaluation(Long applicationId, ApplicationEvaluation evaluation) {
-
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationNotFoundException());
+                .orElseThrow(ApplicationNotFoundException::new);
 
         application.updateEvaluation(evaluation);
     }
-
 
     @Transactional
     public void patch(Long applicationId, ApplicationStatusUpdateRequestDto request) {
         boolean hasStatus = request.status() != null;
         boolean hasEvaluation = request.evaluation() != null;
 
-        if (!hasStatus && !hasEvaluation) {
-            throw new InvalidRequestException();
-        }
-        if (hasStatus && hasEvaluation) {
-            throw new InvalidRequestException();
-        }
+        if (!hasStatus && !hasEvaluation) throw new InvalidRequestException();
+        if (hasStatus && hasEvaluation) throw new InvalidRequestException();
 
-        if (hasStatus) {
-            updateStatus(applicationId, request.status());
-        } else {
-            updateEvaluation(applicationId, request.evaluation());
-        }
+        if (hasStatus) updateStatus(applicationId, request.status());
+        else updateEvaluation(applicationId, request.evaluation());
     }
 
+    @Transactional
     public void deleteAdminApplication(Long applicationId) {
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationNotFoundException());
+                .orElseThrow(ApplicationNotFoundException::new);
 
         applicationRepository.delete(application);
     }
