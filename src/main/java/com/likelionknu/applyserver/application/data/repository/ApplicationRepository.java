@@ -2,6 +2,7 @@ package com.likelionknu.applyserver.application.data.repository;
 
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse;
 import com.likelionknu.applyserver.application.data.entity.Application;
+import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -76,4 +77,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             a.id desc
     """)
     List<Application> findAllByRecruitIdWithUserProfile(@Param("recruitId") Long recruitId);
+
+    List<Application> findAllByUser(User user);
 }
