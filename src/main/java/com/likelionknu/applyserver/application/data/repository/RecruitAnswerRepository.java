@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface RecruitAnswerRepository extends JpaRepository<RecruitAnswer, Long> {
     List<RecruitAnswer> findByApplication(Application application);
+    List<RecruitAnswer> findAllByApplication(Application application);
     List<RecruitAnswer> findByApplicationId(Long applicationId);
     void deleteByApplication_Id(Long applicationId);
 }
