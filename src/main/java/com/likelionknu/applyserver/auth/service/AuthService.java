@@ -125,6 +125,7 @@ public class AuthService {
     public TokenResponseDto userSocialSignIn(String code) {
         GoogleProfile googleProfile = getGoogleProfile(code);
         User user = userRepository.findByEmail(googleProfile.getEmail());
+        boolean isNewUser = false;
 
         if(user == null) {
             log.info("[userSocialSignIn] 새로운 사용자: {}", googleProfile.getEmail());
@@ -146,6 +147,8 @@ public class AuthService {
                             .dataList(mailContentList)
                             .build()
             );
+
+            isNewUser = true;
         } else {
             log.info("[userSocialSignIn] 기존 가입된 사용자: {}", googleProfile.getEmail());
         }
@@ -157,6 +160,7 @@ public class AuthService {
                 .refreshToken(authenticationToken.getRefreshToken())
                 .name(user.getName())
                 .role(user.getRole().toString())
+                .isNewUser(isNewUser)
                 .build();
     }
 

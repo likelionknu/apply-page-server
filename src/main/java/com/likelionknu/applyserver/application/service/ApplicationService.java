@@ -33,7 +33,7 @@ public class ApplicationService {
     public Long saveDraft(Long userId, Long recruitId, List<ApplicationDraftSaveRequest> requests) {
 
         Application application = applicationRepository
-                .findByUserIdAndRecruitIdAndStatus(userId, recruitId, ApplicationStatus.DRAFT)
+                .findByUserIdAndRecruitId(userId, recruitId)
                 .orElseGet(() -> {
                     User user = userRepository.findById(userId)
                             .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. userId=" + userId));
@@ -44,15 +44,16 @@ public class ApplicationService {
                     Application newApp = new Application();
                     newApp.setUser(user);
                     newApp.setRecruit(recruit);
-                    newApp.setStatus(ApplicationStatus.DRAFT);
+                    newApp.changeStatus(ApplicationStatus.DRAFT);
                     newApp.setSubmittedAt(LocalDateTime.now());
-
                     return applicationRepository.save(newApp);
                 });
 
-        applicationAnswerService.replaceAnswers(application, requests);
+        if (application.getStatus() != ApplicationStatus.DRAFT) {
+            throw new IllegalStateException("임시 저장은 DRAFT 상태에서만 가능합니다.");
+        }
 
-        application.setStatus(ApplicationStatus.DRAFT);
+        applicationAnswerService.replaceAnswers(application, requests);
         application.setSubmittedAt(LocalDateTime.now());
 
         return application.getId();
