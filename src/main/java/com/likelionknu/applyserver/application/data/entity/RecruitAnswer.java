@@ -26,6 +26,6 @@ public class RecruitAnswer {
     private RecruitContent content;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String answer;
 }
