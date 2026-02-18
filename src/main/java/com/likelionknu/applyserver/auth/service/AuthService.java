@@ -4,6 +4,7 @@ import com.likelionknu.applyserver.auth.data.dto.response.TokenResponseDto;
 import com.likelionknu.applyserver.auth.data.entity.GoogleProfile;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.data.enums.PlatformDivider;
 import com.likelionknu.applyserver.auth.data.enums.Role;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException;
@@ -47,16 +48,31 @@ public class AuthService {
     @Value("${google.redirect.uri}")
     private String redirectUri;
 
-    private GoogleProfile getGoogleProfile(String code) {
+    @Value("${google.redirect.admin}")
+    private String redirectUriAdmin;
+
+    private GoogleProfile getGoogleProfile(String code, PlatformDivider platformDivider) {
         try {
             RestTemplate restTemplate = new RestTemplate();
+
+            String REDIRECT_URI;
+
+            if(platformDivider.equals(PlatformDivider.APPLY)) {
+                log.info("[getGoogleProfile] 어플라이 소셜 로그인 시도");
+                REDIRECT_URI = redirectUri;
+            } else if (platformDivider.equals(PlatformDivider.ADMIN)) {
+                log.info("[getGoogleProfile] 관리자 소셜 로그인 시도");
+                REDIRECT_URI = redirectUriAdmin;
+            } else {
+                REDIRECT_URI = redirectUri;
+            }
 
             String tokenUrl = "https://oauth2.googleapis.com/token";
             Map<String, String> params = new HashMap<>();
             params.put("code", code);
             params.put("client_id", clientId);
             params.put("client_secret", clientSecret);
-            params.put("redirect_uri", redirectUri);
+            params.put("redirect_uri", REDIRECT_URI);
             params.put("grant_type", "authorization_code");
 
             ResponseEntity<Map<String, Object>> tokenResponse = restTemplate.exchange(
@@ -122,8 +138,8 @@ public class AuthService {
         return newUser;
     }
 
-    public TokenResponseDto userSocialSignIn(String code) {
-        GoogleProfile googleProfile = getGoogleProfile(code);
+    public TokenResponseDto userSocialSignIn(String code, PlatformDivider platformDivider) {
+        GoogleProfile googleProfile = getGoogleProfile(code, platformDivider);
         User user = userRepository.findByEmail(googleProfile.getEmail());
         boolean isNewUser = false;
 

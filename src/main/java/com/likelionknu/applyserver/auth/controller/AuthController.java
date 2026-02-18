@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.auth.controller;
 
 import com.likelionknu.applyserver.auth.data.dto.response.TokenResponseDto;
+import com.likelionknu.applyserver.auth.data.enums.PlatformDivider;
 import com.likelionknu.applyserver.auth.service.AuthService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
@@ -19,8 +20,9 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "구글 소셜 통합 로그인")
-    public GlobalResponse<TokenResponseDto> login(@RequestParam String code) {
-        return GlobalResponse.ok(authService.userSocialSignIn(code));
+    public GlobalResponse<TokenResponseDto> login(@RequestParam String code,
+                                                  @RequestParam(required = false, defaultValue = "APPLY") PlatformDivider platform) {
+        return GlobalResponse.ok(authService.userSocialSignIn(code, platform));
     }
 
     @PostMapping("/reissue")
