@@ -10,6 +10,7 @@ import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException;
 import com.likelionknu.applyserver.common.security.AuthenticationToken;
 import com.likelionknu.applyserver.common.security.JwtTokenProvider;
+import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
 import com.likelionknu.applyserver.mail.service.MailService;
@@ -38,6 +39,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final MailService mailService;
+    private final DiscordNotificationService discordNotificationService;
 
     @Value("${google.client.id}")
     private String clientId;
@@ -134,6 +136,10 @@ public class AuthService {
         newUser.setProfile(profile);
 
         userRepository.save(newUser);
+
+        // 디스코드 알림 발송
+        discordNotificationService.sendNewUserNotification(
+                newUser.getName(), newUser.getEmail(), newUser.getProfileUrl());
 
         return newUser;
     }
