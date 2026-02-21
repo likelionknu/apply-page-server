@@ -55,7 +55,7 @@ public class ApplicationMailService {
                 mailContentList.add(
                         MailContent.builder()
                                 .key("interviewLocation")
-                                .value("이공관 B102호")
+                                .value("추후 공지 예정 (SMS 개별 안내)")
                                 .build()
                 );
                 mailContentList.add(
