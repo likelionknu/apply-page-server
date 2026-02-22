@@ -100,6 +100,6 @@ public class Application {
     }
 
     private void resetEvaluation() {
-        this.evaluation = ApplicationEvaluation.HOLD;
+        this.evaluation = null;
     }
 }
