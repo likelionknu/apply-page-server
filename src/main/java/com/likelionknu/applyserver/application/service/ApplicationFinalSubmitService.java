@@ -10,6 +10,7 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
 import com.likelionknu.applyserver.mail.service.MailService;
@@ -35,6 +36,7 @@ public class ApplicationFinalSubmitService {
     private final UserRepository userRepository;
     private final RecruitRepository recruitRepository;
     private final MailService mailService;
+    private final DiscordNotificationService discordNotificationService;
 
     public void finalSubmit(String email, FinalSubmitRequestDto request) {
         if (request.items() == null || request.items().isEmpty()) {
@@ -141,6 +143,12 @@ public class ApplicationFinalSubmitService {
                         .template("apply-success")
                         .dataList(mailContentList)
                         .build()
+        );
+
+        discordNotificationService.sendUserSubmittedApplication(
+                application.getUser().getName(),
+                application.getUser().getEmail(),
+                application.getRecruit().getTitle()
         );
     }
 }
