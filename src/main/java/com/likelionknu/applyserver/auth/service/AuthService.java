@@ -127,6 +127,8 @@ public class AuthService {
         newUser.setName(googleProfile.getName());
         newUser.setProfileUrl(googleProfile.getProfileUrl());
         newUser.setRole(Role.USER);
+        newUser.setModifiedAt(LocalDateTime.now());
+        newUser.setRegisteredAt(LocalDateTime.now());
         newUser.setLastAccessAt(LocalDateTime.now());
 
         Profile profile = Profile.builder()
