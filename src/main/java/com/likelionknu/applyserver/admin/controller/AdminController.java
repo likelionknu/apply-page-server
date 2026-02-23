@@ -15,6 +15,7 @@ import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class AdminController {
     private final AdminUserService adminUserService;
     private final ApplicationMailService applicationMailService;
     private final AdminApplicationService adminApplicationService;
+
+    @GetMapping("/ping")
+    public ResponseEntity<?> ping() {
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/applications/{id}")
     @Operation(summary = "지원서 상세 정보 조회")
