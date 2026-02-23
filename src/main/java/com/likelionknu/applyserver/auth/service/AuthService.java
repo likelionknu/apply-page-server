@@ -175,6 +175,9 @@ public class AuthService {
             log.info("[userSocialSignIn] 기존 가입된 사용자: {}", googleProfile.getEmail());
         }
 
+        user.setLastAccessAt(LocalDateTime.now());
+        userRepository.save(user);
+
         Authentication authentication = createAuthentication(user);
         AuthenticationToken authenticationToken = jwtTokenProvider.generateToken(authentication);
         return TokenResponseDto.builder()
