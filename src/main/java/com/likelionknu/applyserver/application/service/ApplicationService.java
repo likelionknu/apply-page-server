@@ -12,6 +12,7 @@ import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ApplicationService {
 
@@ -49,6 +51,8 @@ public class ApplicationService {
                     return applicationRepository.save(newApp);
                 });
 
+        log.info("[saveDraft] 사용자 지원서 임시 저장: {} {}", application.getRecruit().getTitle(), application.getUser().getEmail());
+
         if (application.getStatus() != ApplicationStatus.DRAFT) {
             throw new IllegalStateException("임시 저장은 DRAFT 상태에서만 가능합니다.");
         }
@@ -63,6 +67,8 @@ public class ApplicationService {
     public ApplicationInfoResponseDto getApplicationInfo(Long applicationId) {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new IllegalArgumentException("지원서를 찾을 수 없습니다."));
+
+        log.info("[getApplicationInfo] 사용자 지원서 조회: {} {}", application.getRecruit().getTitle(), application.getUser().getEmail());
 
         List<ApplicationAnswerResponseDto> applicationAnswerResponseDtoList = new ArrayList<>();
         List<RecruitAnswer> recruitAnswerList = applicationAnswerService.getAnswers(application);

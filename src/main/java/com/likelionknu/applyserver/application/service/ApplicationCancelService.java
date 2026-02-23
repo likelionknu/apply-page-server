@@ -4,11 +4,13 @@ import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class ApplicationCancelService {
 
@@ -24,6 +26,8 @@ public class ApplicationCancelService {
         }
 
         application.changeStatus(ApplicationStatus.CANCELED);
+
+        log.info("[cancel] 지원서 회수 요청: {} {}", application.getRecruit().getTitle(), application.getUser().getEmail());
     }
 
     public void restore(Long userId, Long recruitId) {

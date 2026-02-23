@@ -19,6 +19,7 @@ import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class ApplicationFinalSubmitService {
 
@@ -150,5 +152,7 @@ public class ApplicationFinalSubmitService {
                 application.getUser().getEmail(),
                 application.getRecruit().getTitle()
         );
+
+        log.info("[finalSubmit] 지원서 최종 제출: {} {}", email, application.getRecruit().getTitle());
     }
 }

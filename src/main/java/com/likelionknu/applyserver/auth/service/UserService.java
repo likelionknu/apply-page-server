@@ -14,11 +14,13 @@ import com.likelionknu.applyserver.mail.data.entity.MailHistory;
 import com.likelionknu.applyserver.mail.data.repository.MailHistoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -60,6 +62,8 @@ public class UserService {
             profile.setStatus(modifyProfileRequestDto.getStatus());
         }
 
+        log.info("[modifyUsersProfile] 사용자 상세 정보 수정: {}", email);
+
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
@@ -78,6 +82,8 @@ public class UserService {
         if(user == null) {
             throw new UserNotFoundException();
         }
+
+        log.info("[getUsersProfile] 사용자 상세 정보 조회: {}", email);
 
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
@@ -111,6 +117,8 @@ public class UserService {
             List<RecruitAnswer> recruitAnswerList = recruitAnswerRepository.findAllByApplication(application);
             recruitAnswerRepository.deleteAll(recruitAnswerList);
         }
+
+        log.info("[deleteUsersProfile] 사용자 회원 탈퇴: {}", email);
 
         applicationRepository.deleteAll(applicationList);
 

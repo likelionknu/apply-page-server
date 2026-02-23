@@ -20,6 +20,7 @@ import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RecruitService {
 
     private final RecruitRepository recruitRepository;
@@ -56,6 +58,8 @@ public class RecruitService {
 
         Recruit recruit = recruitRepository.findById(recruitId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
+
+        log.info("[checkAvailability] 모집 공고 지원 가능 여부 조회: {} {}", recruit.getTitle(), user.getEmail());
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -99,6 +103,8 @@ public class RecruitService {
 
         String email = SecurityUtil.getUsername();
         User user = userRepository.findByEmail(email);
+
+        log.info("[getRecruitQuestions] 공고 질문 조회: 공고 ID: {} 요청: {}", recruitId, user.getEmail());
 
         // 해당 공고에 대한 지원서 조회 (없을 수도 있음)
         Optional<Application> applicationOpt = applicationRepository.findByUserIdAndRecruitId(user.getId(), recruitId);
