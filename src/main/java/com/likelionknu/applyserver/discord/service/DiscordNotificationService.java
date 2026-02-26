@@ -75,4 +75,22 @@ public class DiscordNotificationService {
 
         sendDiscordNotification(ChannelDivider.APPLICATION, sb.toString());
     }
+
+    @Async
+    public void sendUserDraftApplication(String name, String email, String recruitTitle) {
+        log.info("[sendUserSubmittedApplication] Discord 채널에 지원서 임시저장 제출 알림 발송 시도");
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH시 mm분 ss초"));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("## 지원서 임시저장 됨\n");
+        sb.append("> 사용자가 지원서를 임시저장 했습니다.\n\n");
+        sb.append("```yml\n");
+        sb.append(String.format("이름: %s\n", name));
+        sb.append(String.format("이메일 주소: %s\n", email));
+        sb.append(String.format("공고 명: %s\n", recruitTitle));
+        sb.append(String.format("임시저장일: %s\n", now));
+        sb.append("```\n");
+
+        sendDiscordNotification(ChannelDivider.APPLICATION, sb.toString());
+    }
 }
