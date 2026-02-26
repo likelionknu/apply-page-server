@@ -9,6 +9,7 @@ import com.likelionknu.applyserver.application.data.repository.ApplicationReposi
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationAnswerService applicationAnswerService;
+    private final DiscordNotificationService discordNotificationService;
 
     private final UserRepository userRepository;
     private final RecruitRepository recruitRepository;
@@ -59,6 +61,11 @@ public class ApplicationService {
 
         applicationAnswerService.replaceAnswers(application, requests);
         application.setSubmittedAt(LocalDateTime.now());
+
+        discordNotificationService.sendUserDraftApplication(
+                application.getUser().getName(),
+                application.getUser().getEmail(),
+                application.getRecruit().getTitle());
 
         return application.getId();
     }
