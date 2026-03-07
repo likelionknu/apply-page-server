@@ -46,23 +46,26 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findAllWithRecruitByUserId(@Param("userId") Long userId);
 
     @Query("""
-        select new com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse(
-            r.id,
-            r.title,
-            r.startAt,
-            r.endAt,
-            coalesce(sum(case
-                when a.status = com.likelionknu.applyserver.auth.data.enums.ApplicationStatus.SUBMITTED then 1 else 0
-            end), 0),
-            coalesce(sum(case
-                when a.status = com.likelionknu.applyserver.auth.data.enums.ApplicationStatus.DRAFT then 1 else 0
-            end), 0)
-        )
-        from Recruit r
-        left join Application a on a.recruit = r
-        group by r.id, r.title, r.startAt, r.endAt
-        order by r.startAt desc
-    """)
+    select new com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse(
+        r.id,
+        r.title,
+        r.startAt,
+        r.endAt,
+        coalesce(sum(case 
+            when a.status not in (
+                com.likelionknu.applyserver.auth.data.enums.ApplicationStatus.DRAFT, 
+                com.likelionknu.applyserver.auth.data.enums.ApplicationStatus.CANCELED
+            ) then 1 else 0 
+        end), 0),
+        coalesce(sum(case 
+            when a.status = com.likelionknu.applyserver.auth.data.enums.ApplicationStatus.DRAFT then 1 else 0 
+        end), 0)
+    )
+    from Recruit r
+    left join Application a on a.recruit = r
+    group by r.id, r.title, r.startAt, r.endAt
+    order by r.startAt desc
+""")
     List<AdminRecruitSummaryResponse> findRecruitSummary();
 
     @Query("""
