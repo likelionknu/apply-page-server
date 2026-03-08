@@ -9,6 +9,8 @@ import com.likelionknu.applyserver.application.data.repository.ApplicationReposi
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.common.response.ErrorCode;
+import com.likelionknu.applyserver.common.response.GlobalException;
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
@@ -36,14 +38,21 @@ public class ApplicationService {
     @Transactional
     public Long saveDraft(Long userId, Long recruitId, List<ApplicationDraftSaveRequest> requests) {
 
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new IllegalArgumentException("모집 공고를 찾을 수 없습니다. recruitId=" + recruitId));
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean isOpen = !now.isBefore(recruit.getStartAt()) && !now.isAfter(recruit.getEndAt());
+
+        if (!isOpen) {
+            throw new GlobalException(ErrorCode.FORBIDDEN) {};
+        }
+
         Application application = applicationRepository
                 .findByUserIdAndRecruitId(userId, recruitId)
                 .orElseGet(() -> {
                     User user = userRepository.findById(userId)
                             .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. userId=" + userId));
-
-                    Recruit recruit = recruitRepository.findById(recruitId)
-                            .orElseThrow(() -> new IllegalArgumentException("모집 공고를 찾을 수 없습니다. recruitId=" + recruitId));
 
                     Application newApp = new Application();
                     newApp.setUser(user);

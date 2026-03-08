@@ -3,10 +3,14 @@ package com.likelionknu.applyserver.application.service;
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
+import com.likelionknu.applyserver.common.response.ErrorCode;
+import com.likelionknu.applyserver.common.response.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,14 @@ public class ApplicationCancelService {
         Application application = applicationRepository
                 .findByUserIdAndRecruitIdAndStatus(userId, recruitId, ApplicationStatus.CANCELED)
                 .orElseThrow(() -> new IllegalStateException("복구 가능한 지원서가 없습니다."));
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean isOpen = !now.isBefore(application.getRecruit().getStartAt())
+                && !now.isAfter(application.getRecruit().getEndAt());
+
+        if (!isOpen) {
+            throw new GlobalException(ErrorCode.FORBIDDEN) {};
+        }
 
         application.restoreFromCanceled();
     }
