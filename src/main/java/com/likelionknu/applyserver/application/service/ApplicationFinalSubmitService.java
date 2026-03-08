@@ -10,6 +10,8 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.common.response.ErrorCode;
+import com.likelionknu.applyserver.common.response.GlobalException;
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
@@ -63,6 +65,16 @@ public class ApplicationFinalSubmitService {
 
         Long recruitId = request.recruitId();
 
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(RecruitNotFoundException::new);
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean isOpen = !now.isBefore(recruit.getStartAt()) && !now.isAfter(recruit.getEndAt());
+
+        if (!isOpen) {
+            throw new GlobalException(ErrorCode.FORBIDDEN) {};
+        }
+
         Optional<Application> existingOpt = applicationRepository.findByUserIdAndRecruitId(user.getId(), recruitId);
         if (existingOpt.isPresent()) {
             Application existing = existingOpt.get();
@@ -71,21 +83,18 @@ public class ApplicationFinalSubmitService {
             }
         }
 
-        Application application = existingOpt.orElseGet(() -> {
-            Recruit recruit = recruitRepository.findById(recruitId)
-                    .orElseThrow(RecruitNotFoundException::new);
-
-            return applicationRepository.save(
-                    Application.builder()
-                            .recruit(recruit)
-                            .user(user)
-                            .note(null)
-                            .evaluation(null)
-                            .status(ApplicationStatus.DRAFT)
-                            .submittedAt(LocalDateTime.now())
-                            .build()
-            );
-        });
+        Application application = existingOpt.orElseGet(() ->
+                applicationRepository.save(
+                        Application.builder()
+                                .recruit(recruit)
+                                .user(user)
+                                .note(null)
+                                .evaluation(null)
+                                .status(ApplicationStatus.DRAFT)
+                                .submittedAt(LocalDateTime.now())
+                                .build()
+                )
+        );
 
         List<RecruitContent> requiredContents =
                 recruitContentRepository.findAllByRecruit_IdAndRequiredTrue(recruitId);

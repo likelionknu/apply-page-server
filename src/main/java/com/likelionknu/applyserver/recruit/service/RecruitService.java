@@ -99,6 +99,16 @@ public class RecruitService {
     @Transactional(readOnly = true)
     public RecruitDetailResponse getRecruitQuestions(Long recruitId) {
 
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND) {});
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean isOpen = !now.isBefore(recruit.getStartAt()) && !now.isAfter(recruit.getEndAt());
+
+        if (!isOpen) {
+            throw new GlobalException(ErrorCode.FORBIDDEN) {};
+        }
+
         List<RecruitContent> contents = recruitContentRepository.findByRecruitIdOrderByPriorityAsc(recruitId);
 
         String email = SecurityUtil.getUsername();
@@ -137,9 +147,9 @@ public class RecruitService {
         }
 
         return RecruitDetailResponse.builder()
-                .title(contents.getFirst().getRecruit().getTitle())
-                .startAt(contents.getFirst().getRecruit().getStartAt().toString())
-                .endAt(contents.getFirst().getRecruit().getEndAt().toString())
+                .title(recruit.getTitle())
+                .startAt(recruit.getStartAt().toString())
+                .endAt(recruit.getEndAt().toString())
                 .questions(questionList)
                 .build();
     }
