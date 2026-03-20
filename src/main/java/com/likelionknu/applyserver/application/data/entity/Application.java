@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.application.data.entity;
 
+
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;

@@ -1,5 +1,7 @@
 package com.likelionknu.applyserver.application.controller;
 
+import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.dto.request.ApplicationDraftSaveRequest;
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationDetailResponse;
@@ -8,8 +10,6 @@ import com.likelionknu.applyserver.application.service.ApplicationCancelService;
 import com.likelionknu.applyserver.application.service.ApplicationFinalSubmitService;
 import com.likelionknu.applyserver.application.service.ApplicationQueryService;
 import com.likelionknu.applyserver.application.service.ApplicationService;
-import com.likelionknu.applyserver.auth.data.entity.User;
-import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
 import com.likelionknu.applyserver.common.security.exception.AuthenticationInfoException;

@@ -1,5 +1,7 @@
 package com.likelionknu.applyserver.application.service;
 
+import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
@@ -7,9 +9,7 @@ import com.likelionknu.applyserver.application.data.exception.*;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
-import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
-import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService;

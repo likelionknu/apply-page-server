@@ -1,5 +1,7 @@
 package com.likelionknu.applyserver.application.service;
 
+import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationDetailResponse;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationSummaryResponse;
 import com.likelionknu.applyserver.application.data.entity.Application;
@@ -9,8 +11,6 @@ import com.likelionknu.applyserver.application.data.exception.InvalidApplication
 import com.likelionknu.applyserver.application.data.exception.UserNotFoundException;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
-import com.likelionknu.applyserver.auth.data.entity.User;
-import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
