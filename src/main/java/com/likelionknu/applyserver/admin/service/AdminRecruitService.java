@@ -64,13 +64,13 @@ public class AdminRecruitService {
         recruitRepository.save(recruit);
 
         List<RecruitContent> recruitContentList = request.questions().stream()
-                .map(q -> RecruitContent.builder()
-                        .recruit(recruit)
-                        .question(q.question())
-                        .priority(q.priority())
-                        .required(true)
-                        .build()
-                )
+                .map(q -> new RecruitContent(
+                        null,
+                        recruit,
+                        q.question(),
+                        q.priority(),
+                        true
+                ))
                 .toList();
 
         recruitContentRepository.saveAll(recruitContentList);
@@ -94,13 +94,13 @@ public class AdminRecruitService {
         recruitContentRepository.deleteAllByRecruitId(recruitId);
 
         List<RecruitContent> newContents = request.questions().stream()
-                .map(q -> RecruitContent.builder()
-                        .recruit(recruit)
-                        .question(q.question())
-                        .priority(q.priority())
-                        .required(true)
-                        .build()
-                )
+                .map(q -> new RecruitContent(
+                        null,
+                        recruit,
+                        q.question(),
+                        q.priority(),
+                        true
+                ))
                 .toList();
 
         recruitContentRepository.saveAll(newContents);
