@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.recruit.data.dto.response;
 
+import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.enums.RecruitStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

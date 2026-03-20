@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.auth.data.entity;
 
+import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.StudentStatus;
 import jakarta.persistence.*;
 import lombok.*;

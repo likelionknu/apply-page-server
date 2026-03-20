@@ -1,11 +1,11 @@
 package com.likelionknu.applyserver.admin.service;
 
+import com.likelionknu.applyserver.auth.data.entity.User;
+import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
-import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.Role;
-import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
 import java.util.ArrayList;
