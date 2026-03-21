@@ -7,7 +7,6 @@ import com.likelionknu.applyserver.admin.data.exception.InvalidRecruitUpdateRequ
 import com.likelionknu.applyserver.application.data.exception.RecruitNotFoundException;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
-import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.exception.RecruitHasApplicationException;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
