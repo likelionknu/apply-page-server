@@ -2,7 +2,6 @@ package com.likelionknu.applyserver.application.service;
 
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto;
 import com.likelionknu.applyserver.application.data.entity.Application;
-import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.exception.*;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
@@ -16,7 +15,6 @@ import com.likelionknu.applyserver.discord.service.DiscordNotificationService;
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
 import com.likelionknu.applyserver.mail.service.MailService;
-import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
