@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.auth.service;
 
+import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.entity.Application;
@@ -10,7 +11,6 @@ import com.likelionknu.applyserver.application.data.repository.MailHistoryReposi
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.dto.request.ModifyProfileRequestDto;
 import com.likelionknu.applyserver.auth.data.dto.response.ProfileResponseDto;
-import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

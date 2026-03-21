@@ -50,6 +50,4 @@ class User (
         @CreationTimestamp
         @Column(name = "registered_at", nullable = false, updatable = false)
         var registeredAt: LocalDateTime? = null
-) {
-
-}
+)
