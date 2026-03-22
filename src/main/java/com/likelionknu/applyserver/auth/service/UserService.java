@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.auth.service;
 
 import com.likelionknu.applyserver.application.data.entity.Application;
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.dto.request.ModifyProfileRequestDto;

@@ -4,6 +4,7 @@ import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryRe
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
+import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

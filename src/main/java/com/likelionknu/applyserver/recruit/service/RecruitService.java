@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.recruit.service;
 
 import com.likelionknu.applyserver.application.data.entity.Application;
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.entity.Profile;
@@ -14,6 +15,7 @@ import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailability
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitDetailResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResponse;
+import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
