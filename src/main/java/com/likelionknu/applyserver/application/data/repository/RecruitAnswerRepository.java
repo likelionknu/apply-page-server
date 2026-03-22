@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.application.data.repository;
 
 import com.likelionknu.applyserver.application.data.entity.Application;
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

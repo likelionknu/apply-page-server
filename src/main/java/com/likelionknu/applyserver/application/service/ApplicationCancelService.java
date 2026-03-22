@@ -1,7 +1,5 @@
 package com.likelionknu.applyserver.application.service;
 
-import com.likelionknu.applyserver.application.data.entity.Application;
-import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
