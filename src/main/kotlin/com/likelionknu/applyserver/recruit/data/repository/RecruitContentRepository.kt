@@ -10,7 +10,7 @@ interface RecruitContentRepository : JpaRepository<RecruitContent, Long> {
 
     fun findByRecruitIdOrderByPriorityAsc(recruitId: Long): List<RecruitContent>
 
-    fun findAllByRecruit_IdAndRequiredTrue(recruitId: Long): List<RecruitContent>
+    fun findAllByRecruit_IdAndRequiredTrue(recruitId: Long?): List<RecruitContent>
 
     @Modifying
     @Query("delete from RecruitContent rc where rc.recruit.id = :recruitId")
