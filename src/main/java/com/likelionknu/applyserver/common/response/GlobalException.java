@@ -3,7 +3,7 @@ package com.likelionknu.applyserver.common.response;
 import lombok.Getter;
 
 @Getter
-public abstract class GlobalException extends RuntimeException {
+public class GlobalException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public GlobalException(ErrorCode errorCode) {
