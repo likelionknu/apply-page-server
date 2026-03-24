@@ -1,4 +1,4 @@
-package com.likelionknu.applyserver.auth.repository
+package com.likelionknu.applyserver.auth.data.repository
 
 
 import com.likelionknu.applyserver.auth.data.entity.User
