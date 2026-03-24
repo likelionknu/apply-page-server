@@ -6,7 +6,7 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.PlatformDivider;
 import com.likelionknu.applyserver.auth.data.enums.Role;
-import com.likelionknu.applyserver.auth.data.repository.UserRepository;
+import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException;
 import com.likelionknu.applyserver.common.security.AuthenticationToken;
 import com.likelionknu.applyserver.common.security.JwtTokenProvider;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -131,9 +132,8 @@ public class AuthService {
         newUser.setRegisteredAt(LocalDateTime.now());
         newUser.setLastAccessAt(LocalDateTime.now());
 
-        Profile profile = Profile.builder()
-                .user(newUser)
-                .build();
+        Profile profile = new Profile();
+        profile.setUser(newUser);
 
         newUser.setProfile(profile);
 
