@@ -1,4 +1,4 @@
-package com.likelionknu.applyserver.auth.repository
+package com.likelionknu.applyserver.auth.data.repository
 
 import com.likelionknu.applyserver.auth.data.entity.Profile
 import org.springframework.data.jpa.repository.JpaRepository
