@@ -2,8 +2,8 @@ package com.likelionknu.applyserver.mail.service;
 
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
-import com.likelionknu.applyserver.mail.data.entity.MailHistory;
-import com.likelionknu.applyserver.mail.data.repository.MailHistoryRepository;
+import com.likelionknu.applyserver.application.data.entity.MailHistory;
+import com.likelionknu.applyserver.application.data.repository.MailHistoryRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +42,14 @@ public class MailService {
             mailSender.send(mimeMessage);
 
             mailHistoryRepository.save(
-                    MailHistory.builder()
-                            .subject(subject)
-                            .body(body)
-                            .user(mailRequestDto.getUser())
-                            .recipient(mailRequestDto.getEmail())
-                            .sentAt(LocalDateTime.now())
-                            .build()
+                    new MailHistory(
+                            null,
+                            subject,
+                            body,
+                            mailRequestDto.getUser(),
+                            mailRequestDto.getEmail(),
+                            LocalDateTime.now()
+                    )
             );
 
             log.info("[sendMail] 메일 전송 성공: {}, {}", mailRequestDto.getEmail(), subject);

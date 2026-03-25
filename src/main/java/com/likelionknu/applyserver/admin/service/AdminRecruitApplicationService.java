@@ -1,8 +1,6 @@
 package com.likelionknu.applyserver.admin.service;
 
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitApplicationResponse;
-import com.likelionknu.applyserver.application.data.entity.Application;
-import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -5,9 +5,7 @@ import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitDetailRes
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse;
 import com.likelionknu.applyserver.admin.data.exception.InvalidRecruitUpdateRequestException;
 import com.likelionknu.applyserver.application.data.exception.RecruitNotFoundException;
-import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
-import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.exception.RecruitHasApplicationException;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
@@ -64,13 +62,13 @@ public class AdminRecruitService {
         recruitRepository.save(recruit);
 
         List<RecruitContent> recruitContentList = request.questions().stream()
-                .map(q -> RecruitContent.builder()
-                        .recruit(recruit)
-                        .question(q.question())
-                        .priority(q.priority())
-                        .required(true)
-                        .build()
-                )
+                .map(q -> new RecruitContent(
+                        null,
+                        recruit,
+                        q.question(),
+                        q.priority(),
+                        true
+                ))
                 .toList();
 
         recruitContentRepository.saveAll(recruitContentList);
@@ -94,13 +92,13 @@ public class AdminRecruitService {
         recruitContentRepository.deleteAllByRecruitId(recruitId);
 
         List<RecruitContent> newContents = request.questions().stream()
-                .map(q -> RecruitContent.builder()
-                        .recruit(recruit)
-                        .question(q.question())
-                        .priority(q.priority())
-                        .required(true)
-                        .build()
-                )
+                .map(q -> new RecruitContent(
+                        null,
+                        recruit,
+                        q.question(),
+                        q.priority(),
+                        true
+                ))
                 .toList();
 
         recruitContentRepository.saveAll(newContents);

@@ -1,8 +1,6 @@
 package com.likelionknu.applyserver.application.service;
 
 import com.likelionknu.applyserver.application.data.dto.request.ApplicationDraftSaveRequest;
-import com.likelionknu.applyserver.application.data.entity.Application;
-import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
