@@ -13,7 +13,7 @@ import com.likelionknu.applyserver.application.data.exception.UserNotFoundExcept
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
-import com.likelionknu.applyserver.auth.data.repository.UserRepository
+import com.likelionknu.applyserver.auth.repository.UserRepository
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository
@@ -29,11 +29,13 @@ class ApplicationFinalSubmitService(
     private val discordNotificationService: DiscordNotificationService
 ) {
     fun finalSubmit(
-        email: String, request: FinalSubmitRequestDto
+        email: String,
+        request: FinalSubmitRequestDto
     ) {
         if (request.items.isEmpty()) throw EmptyAnswerException()
 
         val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
+        val userId = user.id ?: throw UserNotFoundException()
         val profile = user.profile
 
         val profileCompleted = profile != null &&
@@ -47,12 +49,13 @@ class ApplicationFinalSubmitService(
 
         val recruit = recruitRepository.findById(request.recruitId)
             .orElseThrow { RecruitNotFoundException() }
+        val recruitId = recruit.id ?: throw RecruitNotFoundException()
 
         val now = LocalDateTime.now()
         val isOpen = !now.isBefore(recruit.startAt) && !now.isAfter(recruit.endAt)
         if (!isOpen) throw RecruitIsNotOpenedException()
 
-        val existingApplication = applicationRepository.findByUserIdAndRecruitId(user.id, request.recruitId)
+        val existingApplication = applicationRepository.findByUserIdAndRecruitId(userId, request.recruitId)
 
         if (existingApplication != null && existingApplication.status != ApplicationStatus.DRAFT) {
             throw IllegalStateException("이미 제출되었거나 처리 중인 지원서는 최종 제출을 다시 할 수 없습니다. 회수 취소(restore)만 가능합니다.")
@@ -66,15 +69,16 @@ class ApplicationFinalSubmitService(
                 submittedAt = now,
             )
         )
+        val applicationId = application.id ?: throw IllegalStateException("지원서 ID가 없습니다.")
 
-        val requiredContents = recruitContentRepository.findAllByRecruit_IdAndRequiredTrue(recruit.id)
+        val requiredContents = recruitContentRepository.findAllByRecruit_IdAndRequiredTrue(recruitId)
         val submittedQuestionIds = request.items.map { it.questionId }.toSet()
 
         requiredContents.forEach { required ->
             if (required.id !in submittedQuestionIds) throw EmptyAnswerException()
         }
 
-        recruitAnswerRepository.deleteByApplication_Id(application.id)
+        recruitAnswerRepository.deleteByApplication_Id(applicationId)
 
         val answers = request.items.map { item ->
             val content = recruitContentRepository.findById(item.questionId)
@@ -92,22 +96,6 @@ class ApplicationFinalSubmitService(
         recruitAnswerRepository.saveAll(answers)
         application.submittedAt = LocalDateTime.now()
         application.changeStatus(ApplicationStatus.SUBMITTED)
-
-        // TODO: MailService 리펙토링 완료 시 추가
-//        val mailContentList = listOf(
-//            MailContent(key = "userName", value = application.user.name),
-//            MailContent(key = "part", value = application.recruit.title)
-//        )
-//
-//        mailService.sendMail(
-//            MailRequestDto(
-//                user = null,
-//                email = application.user.email,
-//                title = "지원이 완료되었습니다!",
-//                template = "apply-success",
-//                dataList = mailContentList
-//            )
-//        )
 
         discordNotificationService.sendUserSubmittedApplication(
             application.user.name,

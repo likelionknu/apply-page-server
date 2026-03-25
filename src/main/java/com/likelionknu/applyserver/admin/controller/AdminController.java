@@ -9,7 +9,6 @@ import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
 import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfoResponseDto;
 import com.likelionknu.applyserver.application.service.ApplicationMailService;
-import com.likelionknu.applyserver.application.service.ApplicationService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
 import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;

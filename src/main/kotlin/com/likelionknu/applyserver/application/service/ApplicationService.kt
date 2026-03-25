@@ -9,7 +9,7 @@ import com.likelionknu.applyserver.application.data.exception.ApplicationStateEx
 import com.likelionknu.applyserver.application.data.exception.UserNotFoundException
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
-import com.likelionknu.applyserver.auth.data.repository.UserRepository
+import com.likelionknu.applyserver.auth.repository.UserRepository
 import com.likelionknu.applyserver.common.response.ErrorCode
 import com.likelionknu.applyserver.common.response.GlobalException
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class ApplicationService (
+class ApplicationService(
     private val applicationRepository: ApplicationRepository,
     private val applicationAnswerService: ApplicationAnswerService,
     private val discordNotificationService: DiscordNotificationService,
@@ -27,29 +27,32 @@ class ApplicationService (
     private val recruitRepository: RecruitRepository
 ) {
     /**
-     *  지원서 임시 저장
+     * 지원서 임시 저장
      *
-     *  모집 공고가 모집 상태일 때에만 임시 저장 가능
-     *  기존 지원서가 없다면 DRAFT 상태로 지원서를 생성함
+     * 모집 공고가 모집 상태일 때에만 임시 저장 가능
+     * 기존 지원서가 없다면 DRAFT 상태로 지원서를 생성함
      *
-     *  @param userId: 사용자 고유 ID
-     *  @param recruitId: 모집 공고 고유 ID
-     *  @param requests: 임시 저장할 답변 목록
-     *  @return (임시 저장한) 지원서 ID
+     * @param userId: 사용자 고유 ID
+     * @param recruitId: 모집 공고 고유 ID
+     * @param requests: 임시 저장할 답변 목록
+     * @return (임시 저장한) 지원서 ID
      *
-     *  @throws ApplicationNotFoundException 모집 공고를 찾을 수 없을 경우
-     *  @throws ApplicationStateException 현재 지원서 상태가 DRAFT(임시 저장) 상태가 아닐 때
-     *  @throws GlobalException 모집 공고가 모집 상태가 아닐 경우
+     * @throws ApplicationNotFoundException 모집 공고를 찾을 수 없을 경우
+     * @throws ApplicationStateException 현재 지원서 상태가 DRAFT(임시 저장) 상태가 아닐 때
+     * @throws GlobalException 모집 공고가 모집 상태가 아닐 경우
      */
     @Transactional
     fun saveDraft(
-        userId: Long, recruitId: Long, requests: List<ApplicationDraftSaveRequest>
+        userId: Long,
+        recruitId: Long,
+        requests: List<ApplicationDraftSaveRequest>
     ): Long {
-        val recruit = recruitRepository.findById(recruitId).orElseThrow { ApplicationNotFoundException() }
+        val recruit = recruitRepository.findById(recruitId)
+            .orElseThrow { ApplicationNotFoundException() }
         val now = LocalDateTime.now()
         val isOpen = !now.isBefore(recruit.startAt) && !now.isAfter(recruit.endAt)
 
-        if(!isOpen) throw GlobalException(ErrorCode.FORBIDDEN)
+        if (!isOpen) throw GlobalException(ErrorCode.FORBIDDEN)
 
         val application = applicationRepository
             .findByUserIdAndRecruitId(userId, recruitId)
@@ -74,7 +77,7 @@ class ApplicationService (
             application.recruit.title
         )
 
-        return application.id
+        return application.id ?: throw ApplicationNotFoundException()
     }
 
     /**
@@ -97,7 +100,7 @@ class ApplicationService (
             )
         }
 
-        val profile = application.user.profile
+        val profile = application.user.profile ?: throw UserNotFoundException()
 
         return ApplicationInfoResponseDto(
             name = application.user.name,
@@ -105,7 +108,7 @@ class ApplicationService (
             depart = profile.depart,
             studentId = profile.studentId,
             grade = profile.grade,
-            studentStatus = profile.status.displayName,
+            studentStatus = profile.status?.displayName,
             status = application.status.toString(),
             submittedAt = application.submittedAt,
             phone = profile.phone,

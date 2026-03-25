@@ -5,7 +5,6 @@ import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.entity.RecruitAnswer;
-import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository;
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.common.response.ErrorCode;
