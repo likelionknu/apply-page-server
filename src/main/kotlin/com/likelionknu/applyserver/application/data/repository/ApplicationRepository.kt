@@ -1,6 +1,6 @@
 package com.likelionknu.applyserver.application.data.repository
 
-import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse
+import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponseDto
 import com.likelionknu.applyserver.application.data.entity.Application
 import com.likelionknu.applyserver.auth.data.entity.User
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
@@ -58,7 +58,7 @@ interface ApplicationRepository: JpaRepository<Application, Long> {
     fun findAllWithRecruitByUserId(@Param("userId") userId: Long): List<Application>
 
     @Query("""
-        select new com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponse(
+        select new com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitSummaryResponseDto(
             r.id,
             r.title,
             r.startAt,
@@ -78,7 +78,7 @@ interface ApplicationRepository: JpaRepository<Application, Long> {
         group by r.id, r.title, r.startAt, r.endAt
         order by r.startAt desc
     """)
-    fun findRecruitSummary(): List<AdminRecruitSummaryResponse>
+    fun findRecruitSummary(): List<AdminRecruitSummaryResponseDto>
 
     @Query("""
         select a from Application a
