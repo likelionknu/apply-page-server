@@ -2,17 +2,16 @@ package com.likelionknu.applyserver.application.service;
 
 import com.likelionknu.applyserver.auth.data.entity.User;
 
-import com.likelionknu.applyserver.auth.repository.UserRepository;
 import com.likelionknu.applyserver.application.data.entity.Application;
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository;
 
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
+import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.UserNotFoundException;
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto;
 import com.likelionknu.applyserver.mail.data.entity.MailContent;
 import com.likelionknu.applyserver.mail.service.MailService;
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
-import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

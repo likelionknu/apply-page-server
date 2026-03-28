@@ -6,7 +6,7 @@ import com.likelionknu.applyserver.auth.data.entity.Profile;
 import com.likelionknu.applyserver.auth.data.entity.User;
 import com.likelionknu.applyserver.auth.data.enums.PlatformDivider;
 import com.likelionknu.applyserver.auth.data.enums.Role;
-import com.likelionknu.applyserver.auth.repository.UserRepository;
+import com.likelionknu.applyserver.auth.data.repository.UserRepository;
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException;
 import com.likelionknu.applyserver.common.security.AuthenticationToken;
 import com.likelionknu.applyserver.common.security.JwtTokenProvider;

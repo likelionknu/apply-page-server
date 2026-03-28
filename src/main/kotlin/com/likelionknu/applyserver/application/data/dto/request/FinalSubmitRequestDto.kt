@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull
 
 data class FinalSubmitRequestDto(
     @field:NotNull
-    var recruitId: Long,
+    val recruitId: Long,
 
     @field:NotEmpty
     @field:Valid
@@ -15,7 +15,7 @@ data class FinalSubmitRequestDto(
 ) {
     data class Item(
         @field:NotNull
-        var questionId: Long,
+        val questionId: Long,
 
         @field:NotBlank
         val answer: String

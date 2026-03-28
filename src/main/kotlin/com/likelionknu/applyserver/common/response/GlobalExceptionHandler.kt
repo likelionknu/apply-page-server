@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
     @ExceptionHandler(GlobalException::class)
-    fun handleGlobalException(e: GlobalException): ResponseEntity<GlobalResponse<*>> {
+    fun handleGlobalException(e: GlobalException): ResponseEntity<GlobalResponse<Any>> {
         val status = HttpStatus.valueOf(e.errorCode.status)
         return ResponseEntity
             .status(status)
-            .body(GlobalResponse.error(e))
+            .body(GlobalResponse.error<Any>(e))
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<GlobalResponse<*>> {
+    fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<GlobalResponse<Any>> {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(GlobalResponse.error<Any>(ErrorCode.VALIDATION_ERROR))

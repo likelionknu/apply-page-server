@@ -1,11 +1,6 @@
 package com.likelionknu.applyserver.recruit.controller;
 
 import com.likelionknu.applyserver.common.response.GlobalResponse;
-import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailabilityResponse;
-import com.likelionknu.applyserver.recruit.data.dto.response.RecruitDetailResponse;
-import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
-import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResponse;
-import com.likelionknu.applyserver.recruit.service.RecruitService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
