@@ -9,7 +9,6 @@ import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepo
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus;
 import com.likelionknu.applyserver.common.response.ErrorCode;
 import com.likelionknu.applyserver.common.response.GlobalException;
-import com.likelionknu.applyserver.common.security.SecurityUtil;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitAvailabilityResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitDetailResponse;
 import com.likelionknu.applyserver.recruit.data.dto.response.RecruitListResponse;
@@ -17,7 +16,6 @@ import com.likelionknu.applyserver.recruit.data.dto.response.RecruitQuestionResp
 
 import com.likelionknu.applyserver.recruit.data.entity.Recruit;
 import com.likelionknu.applyserver.recruit.data.entity.RecruitContent;
-import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository;
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,6 @@ package com.likelionknu.applyserver.auth.controller;
 
 import com.likelionknu.applyserver.auth.data.dto.request.ModifyProfileRequestDto;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
-import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
