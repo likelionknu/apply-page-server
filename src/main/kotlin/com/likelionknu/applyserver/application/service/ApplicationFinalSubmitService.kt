@@ -14,7 +14,7 @@ import com.likelionknu.applyserver.application.data.repository.ApplicationReposi
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
 import com.likelionknu.applyserver.auth.data.repository.UserRepository
-import com.likelionknu.applyserver.discord.service.DiscordNotificationService
+import com.likelionknu.applyserver.discord.data.service.DiscordNotificationService
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository
 import java.time.LocalDateTime
