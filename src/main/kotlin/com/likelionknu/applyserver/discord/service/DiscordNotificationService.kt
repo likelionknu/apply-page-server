@@ -1,4 +1,4 @@
-package com.likelionknu.applyserver.discord.data.service
+package com.likelionknu.applyserver.discord.service
 
 import com.likelionknu.applyserver.discord.data.dto.DiscordMessageDto
 import com.likelionknu.applyserver.discord.data.enums.ChannelDivider
