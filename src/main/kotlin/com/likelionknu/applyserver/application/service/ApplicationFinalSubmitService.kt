@@ -9,7 +9,6 @@ import com.likelionknu.applyserver.application.data.exception.ProfileIncompleteE
 import com.likelionknu.applyserver.application.data.exception.RecruitContentNotFoundException
 import com.likelionknu.applyserver.application.data.exception.RecruitIsNotOpenedException
 import com.likelionknu.applyserver.application.data.exception.RecruitNotFoundException
-import com.likelionknu.applyserver.application.data.exception.UserNotFoundException
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
 import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
@@ -33,7 +32,7 @@ class ApplicationFinalSubmitService(
     ) {
         if (request.items.isEmpty()) throw EmptyAnswerException()
 
-        val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
+        val user = userRepository.findByEmail(email)
         val profile = user.profile
 
         val profileCompleted = profile != null &&
