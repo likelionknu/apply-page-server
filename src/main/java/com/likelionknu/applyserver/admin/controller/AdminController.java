@@ -1,9 +1,9 @@
 package com.likelionknu.applyserver.admin.controller;
 
-import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequest;
-import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponse;
 import com.likelionknu.applyserver.admin.data.dto.request.AdminMemoRequestDto;
+import com.likelionknu.applyserver.admin.data.dto.request.AdminUserRoleUpdateRequestDto;
 import com.likelionknu.applyserver.admin.data.dto.request.ApplicationStatusUpdateRequestDto;
+import com.likelionknu.applyserver.admin.data.dto.response.AdminUserDetailResponseDto;
 import com.likelionknu.applyserver.admin.data.dto.response.AdminUserResponseDto;
 import com.likelionknu.applyserver.admin.service.AdminApplicationService;
 import com.likelionknu.applyserver.admin.service.AdminUserService;
@@ -49,7 +49,7 @@ public class AdminController {
 
     @GetMapping("/users/{id}")
     @Operation(summary = "특정 사용자 상세 정보 조회")
-    public GlobalResponse<AdminUserDetailResponse> getUserDetail(@PathVariable Long id) {
+    public GlobalResponse<AdminUserDetailResponseDto> getUserDetail(@PathVariable Long id) {
         return GlobalResponse.ok(adminUserService.getUserDetail(id));
     }
 
@@ -64,7 +64,7 @@ public class AdminController {
     @Operation(summary = "특정 사용자 권한 변경")
     public GlobalResponse<Void> updateUserRole(
             @PathVariable Long id,
-            @RequestBody AdminUserRoleUpdateRequest request
+            @RequestBody AdminUserRoleUpdateRequestDto request
     ) {
         adminUserService.updateUserRole(id, request.getRole());
         return GlobalResponse.ok();
