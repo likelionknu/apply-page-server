@@ -15,28 +15,29 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "profile")
 open class Profile(
-        @Id
-        @Column(name = "user_id")
-        open var userId: Long? = null,
 
-        @MapsId
-        @OneToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id")
-        open var user: User? = null,
+    @Id
+    @Column(name = "user_id")
+    open var userId: Long? = null,
 
-        @Column(name = "student_id", unique = true)
-        open var studentId: String? = null,
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    open var user: User? = null,
 
-        @Column
-        open var depart: String? = null,
+    @Column(name = "student_id", unique = true)
+    open var studentId: String? = null,
 
-        @Column
-        open var phone: String? = null,
+    @Column
+    open var depart: String? = null,
 
-        @Column
-        open var grade: Int? = null,
+    @Column
+    open var phone: String? = null,
 
-        @Enumerated(EnumType.STRING)
-        @Column
-        open var status: StudentStatus? = null
+    @Column
+    open var grade: Int? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    open var status: StudentStatus? = null
 )
