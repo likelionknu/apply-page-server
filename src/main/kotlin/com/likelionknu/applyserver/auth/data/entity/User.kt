@@ -1,4 +1,3 @@
-// package auth.data.entity
 package com.likelionknu.applyserver.auth.data.entity
 
 import com.likelionknu.applyserver.application.data.entity.Application
@@ -13,7 +12,7 @@ import java.time.LocalDateTime
 class User (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long? = null,
+        val id: Long,
 
         @Column(nullable = false, unique = true)
         var email: String = "",
@@ -32,7 +31,7 @@ class User (
                 cascade = [CascadeType.ALL],
                 orphanRemoval = true,
                 fetch = FetchType.LAZY)
-        var profile: Profile ?= null,
+        var profile: Profile?= null,
 
         // 사용자 삭제 시 함께 삭제되도록 하기 위한 연관관계
         @OneToMany(mappedBy = "user",

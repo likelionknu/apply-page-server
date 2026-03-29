@@ -17,15 +17,18 @@ import com.likelionknu.applyserver.auth.repository.UserRepository
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService
 import com.likelionknu.applyserver.recruit.data.repository.RecruitContentRepository
 import com.likelionknu.applyserver.recruit.data.repository.RecruitRepository
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
+@Service
+@Transactional
 class ApplicationFinalSubmitService(
     private val applicationRepository: ApplicationRepository,
     private val recruitAnswerRepository: RecruitAnswerRepository,
     private val recruitContentRepository: RecruitContentRepository,
     private val userRepository: UserRepository,
     private val recruitRepository: RecruitRepository,
-//    private val mailService: MailService,
     private val discordNotificationService: DiscordNotificationService
 ) {
     fun finalSubmit(
@@ -34,7 +37,7 @@ class ApplicationFinalSubmitService(
     ) {
         if (request.items.isEmpty()) throw EmptyAnswerException()
 
-        val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
+        val user = userRepository.findByEmail(email)
         val userId = user.id ?: throw UserNotFoundException()
         val profile = user.profile
 
