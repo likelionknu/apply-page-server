@@ -15,11 +15,9 @@ import com.likelionknu.applyserver.common.security.SecurityUtil
 import com.likelionknu.applyserver.common.security.exception.AuthenticationInfoException
 import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
-import lombok.RequiredArgsConstructor
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/applications")
 class ApplicationController(
     private val applicationService: ApplicationService,
