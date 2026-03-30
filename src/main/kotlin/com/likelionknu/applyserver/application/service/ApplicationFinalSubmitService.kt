@@ -1,6 +1,7 @@
 package com.likelionknu.applyserver.application.service
 
 import com.likelionknu.applyserver.application.data.dto.request.FinalSubmitRequestDto
+import com.likelionknu.applyserver.application.data.entity.Application
 import com.likelionknu.applyserver.application.data.entity.RecruitAnswer
 import com.likelionknu.applyserver.application.data.exception.EmptyAnswerException
 import com.likelionknu.applyserver.application.data.exception.InvalidApplicationQuestionException

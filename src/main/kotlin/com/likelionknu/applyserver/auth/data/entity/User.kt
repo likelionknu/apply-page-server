@@ -1,5 +1,6 @@
 package com.likelionknu.applyserver.auth.data.entity
 
+import com.likelionknu.applyserver.application.data.entity.Application
 import com.likelionknu.applyserver.auth.data.enums.Role
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -11,7 +12,7 @@ import java.time.LocalDateTime
 class User (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        val id: Long? = null,
 
         @Column(nullable = false, unique = true)
         var email: String = "",

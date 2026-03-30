@@ -13,7 +13,7 @@ class GlobalExceptionHandler {
         val status = HttpStatus.valueOf(e.errorCode.status)
         return ResponseEntity
             .status(status)
-            .body(GlobalResponse.error(e))
+            .body(GlobalResponse.error<Any>(e))
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)

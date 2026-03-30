@@ -7,12 +7,12 @@ import com.likelionknu.applyserver.auth.data.entity.User
 import com.likelionknu.applyserver.auth.data.enums.PlatformDivider
 import com.likelionknu.applyserver.auth.data.enums.Role
 import com.likelionknu.applyserver.auth.exception.GoogleAuthenticaionFailedException
-import com.likelionknu.applyserver.auth.repository.UserRepository
+import com.likelionknu.applyserver.auth.data.repository.UserRepository
 import com.likelionknu.applyserver.common.security.JwtTokenProvider
 import com.likelionknu.applyserver.discord.service.DiscordNotificationService
 import com.likelionknu.applyserver.mail.data.dto.MailRequestDto
 import com.likelionknu.applyserver.mail.data.entity.MailContent
-import com.likelionknu.applyserver.mail.service.MailService
+import com.likelionknu.applyserver.mail.data.service.MailService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference

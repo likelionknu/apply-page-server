@@ -1,9 +1,11 @@
 package com.likelionknu.applyserver.admin.service
 
 import com.likelionknu.applyserver.admin.data.dto.response.AdminRecruitApplicationResponseDto
+import com.likelionknu.applyserver.application.data.entity.Application
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.collections.map
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +28,7 @@ class AdminRecruitApplicationService(
 
         return applications.map { application ->
             AdminRecruitApplicationResponseDto(
-                application.id,
+                application.id!!,
                 application.user.name,
                 application.note,
                 application.evaluation?.name,

@@ -1,7 +1,7 @@
 package com.likelionknu.applyserver.common.security
 
 import com.likelionknu.applyserver.auth.data.enums.Role
-import com.likelionknu.applyserver.auth.repository.UserRepository
+import com.likelionknu.applyserver.auth.data.repository.UserRepository
 import com.likelionknu.applyserver.common.redis.RedisService
 import com.likelionknu.applyserver.common.response.ErrorCode
 import com.likelionknu.applyserver.common.security.exception.JwtAuthenticationException

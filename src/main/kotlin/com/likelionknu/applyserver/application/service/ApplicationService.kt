@@ -6,6 +6,7 @@ import com.likelionknu.applyserver.application.data.dto.response.ApplicationInfo
 import com.likelionknu.applyserver.application.data.exception.ApplicationNotFoundException
 import com.likelionknu.applyserver.application.data.exception.ApplicationStateException
 import com.likelionknu.applyserver.application.data.exception.UserNotFoundException
+import com.likelionknu.applyserver.application.data.entity.Application
 import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
 import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
 import com.likelionknu.applyserver.auth.data.repository.UserRepository

@@ -28,7 +28,7 @@ class AdminUserService(
 
         return users.map { user ->
             AdminUserResponseDto(
-                userId = user.id,
+                userId = user.id!!,
                 name = user.name,
                 email = user.email,
                 role = user.role.name,

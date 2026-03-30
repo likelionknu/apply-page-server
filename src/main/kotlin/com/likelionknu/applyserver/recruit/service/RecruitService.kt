@@ -46,8 +46,8 @@ class RecruitService (
         val now: LocalDateTime = LocalDateTime.now();
         val isOpen: Boolean = !now.isBefore(recruit.startAt) && !now.isAfter(recruit.endAt);
 
-        val existDraft = applicationRepository.existsByUserIdAndRecruitIdAndStatus(user.id, recruitId, ApplicationStatus.DRAFT)
-        val hasSubmitted = applicationRepository.existsByUserIdAndRecruitIdAndStatusNot(user.id, recruitId, ApplicationStatus.DRAFT)
+        val existDraft = applicationRepository.existsByUserIdAndRecruitIdAndStatus(user.id!!, recruitId, ApplicationStatus.DRAFT)
+        val hasSubmitted = applicationRepository.existsByUserIdAndRecruitIdAndStatusNot(user.id!!, recruitId, ApplicationStatus.DRAFT)
 
         val profile = user.profile
         val profileCompleted = profile != null &&
@@ -77,13 +77,13 @@ class RecruitService (
         log.info("[getRecruitQuestions] 공고 질문 조회: 공고 ID: {} 요청: {}", recruitId, user.email);
 
         // 해당 공고에 대한 지원서 조회 (없을 수도 있음)
-        val application = applicationRepository.findByUserIdAndRecruitId(user.id, recruitId)
+        val application = applicationRepository.findByUserIdAndRecruitId(user.id!!, recruitId)
 
         // 답변 구성
         val answerMap = application?.let { app ->
-            recruitAnswerRepository.findByApplicationId(app.id)
+            recruitAnswerRepository.findByApplicationId(app.id!!)
                     .associate { it.content.id to it.answer }
-        } ?: emptyMap()
+        } ?: emptyMap<Long?, String>()
 
         // 질문
         val questionList = contents.map { content ->

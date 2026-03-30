@@ -1,104 +1,92 @@
-package com.likelionknu.applyserver.application.data.entity
+package com.likelionknu.applyserver.auth.service
 
+import com.likelionknu.applyserver.application.data.entity.Application
+import com.likelionknu.applyserver.application.data.entity.MailHistory
+import com.likelionknu.applyserver.application.data.entity.RecruitAnswer
+import com.likelionknu.applyserver.application.data.repository.ApplicationRepository
+import com.likelionknu.applyserver.application.data.repository.MailHistoryRepository
+import com.likelionknu.applyserver.application.data.repository.RecruitAnswerRepository
+import com.likelionknu.applyserver.auth.data.dto.request.ModifyProfileRequestDto
+import com.likelionknu.applyserver.auth.data.dto.response.ProfileResponseDto
+import com.likelionknu.applyserver.auth.data.entity.Profile
 import com.likelionknu.applyserver.auth.data.entity.User
-import com.likelionknu.applyserver.auth.data.enums.ApplicationEvaluation
-import com.likelionknu.applyserver.auth.data.enums.ApplicationStatus
-import com.likelionknu.applyserver.recruit.data.entity.Recruit
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
-import java.time.LocalDateTime
+import com.likelionknu.applyserver.auth.exception.UserNotFoundException
+import com.likelionknu.applyserver.auth.data.repository.UserRepository
+import jakarta.transaction.Transactional
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
-@Entity
-@Table(name = "application")
-open class Application(
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recruit_id", nullable = false)
-    open var recruit: Recruit,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    open var user: User,
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    open var status: ApplicationStatus,
-
-    @Column(name = "submitted_at", nullable = false)
-    open var submittedAt: LocalDateTime,
-
-    @OneToMany(mappedBy = "application", cascade = [CascadeType.ALL], orphanRemoval = true)
-    open var answers: MutableList<RecruitAnswer> = mutableListOf(),
-
-    @Column(name = "note", length = 100)
-    open var note: String? = null,
-
-    @Enumerated(EnumType.STRING)
-    open var evaluation: ApplicationEvaluation? = null,
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "before_canceled_status")
-    open var beforeCanceledStatus: ApplicationStatus? = null,
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long? = null
+@Service
+class UserService(
+    private val userRepository: UserRepository,
+    private val mailHistoryRepository: MailHistoryRepository,
+    private val applicationRepository: ApplicationRepository,
+    private val recruitAnswerRepository: RecruitAnswerRepository
 ) {
-    fun updateNote(memo: String) {
-        note = memo
+    private val log = LoggerFactory.getLogger(UserService::class.java)
+
+    @Transactional
+    fun modifyUsersProfile(email: String, modifyProfileRequestDto: ModifyProfileRequestDto): ProfileResponseDto {
+        val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
+        val profile = checkNotNull(user.profile)
+
+        modifyProfileRequestDto.name?.let { user.name = it }
+        modifyProfileRequestDto.depart?.let { profile.depart = it }
+        modifyProfileRequestDto.studentId?.let { profile.studentId = it }
+        modifyProfileRequestDto.grade?.let { profile.grade = it }
+        modifyProfileRequestDto.phone?.let { profile.phone = it }
+        modifyProfileRequestDto.status?.let { profile.status = it }
+
+        log.info("[modifyUsersProfile] 사용자 상세 정보 수정: {}", email)
+
+        return ProfileResponseDto(
+            email = user.email,
+            name = user.name,
+            profileUrl = user.profileUrl,
+            depart = profile.depart,
+            studentId = profile.studentId,
+            grade = profile.grade,
+            phone = profile.phone,
+            status = profile.status?.displayName
+        )
     }
 
-    fun updateEvaluation(evaluation: ApplicationEvaluation) {
-        this.evaluation = evaluation
+    fun getUsersProfile(email: String): ProfileResponseDto {
+        val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
+        val profile = checkNotNull(user.profile)
+
+        log.info("[getUsersProfile] 사용자 상세 정보 조회: {}", email)
+
+        return ProfileResponseDto(
+            email = user.email,
+            name = user.name,
+            profileUrl = user.profileUrl,
+            depart = profile.depart,
+            studentId = profile.studentId,
+            grade = profile.grade,
+            phone = profile.phone,
+            status = profile.status?.displayName
+        )
     }
 
-    fun changeStatus(newStatus: ApplicationStatus?) {
-        newStatus ?: return
+    fun deleteUsersProfile(email: String) {
+        val user = userRepository.findByEmail(email) ?: throw UserNotFoundException()
 
-        when {
-            newStatus == ApplicationStatus.CANCELED && status != ApplicationStatus.CANCELED -> {
-                beforeCanceledStatus = status
-                status = ApplicationStatus.CANCELED
-                resetEvaluation()
-            }
-            status == ApplicationStatus.CANCELED && newStatus != ApplicationStatus.CANCELED -> {
-                status = newStatus
-                beforeCanceledStatus = null
-                resetEvaluation()
-            }
-            status != newStatus -> {
-                status = newStatus
-                resetEvaluation()
-            }
+        val mailHistoryList: List<MailHistory> = mailHistoryRepository.findAllByUser(user)
+        for (mailHistory in mailHistoryList) {
+            mailHistory.user = null
+            mailHistoryRepository.save(mailHistory)
         }
-    }
 
-    fun restoreFromCanceled() {
-        check(status == ApplicationStatus.CANCELED) {
-            "CANCELED 상태가 아닙니다."
+        val applicationList: List<Application> = applicationRepository.findAllByUser(user)
+        for (application in applicationList) {
+            val recruitAnswerList: List<RecruitAnswer> = recruitAnswerRepository.findAllByApplication(application)
+            recruitAnswerRepository.deleteAll(recruitAnswerList)
         }
 
-        val previousStatus = checkNotNull(beforeCanceledStatus) {
-            "복구할 이전 상태 정보가 없습니다."
-        }
+        log.info("[deleteUsersProfile] 사용자 회원 탈퇴: {}", email)
 
-        status = previousStatus
-        beforeCanceledStatus = null
-        resetEvaluation()
-    }
-
-    private fun resetEvaluation() {
-        evaluation = null
+        applicationRepository.deleteAll(applicationList)
+        userRepository.delete(user)
     }
 }

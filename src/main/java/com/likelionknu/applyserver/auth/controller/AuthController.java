@@ -4,6 +4,7 @@ import com.likelionknu.applyserver.auth.data.dto.response.TokenResponseDto;
 import com.likelionknu.applyserver.auth.data.enums.PlatformDivider;
 import com.likelionknu.applyserver.auth.service.AuthService;
 import com.likelionknu.applyserver.common.response.GlobalResponse;
+import com.likelionknu.applyserver.common.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

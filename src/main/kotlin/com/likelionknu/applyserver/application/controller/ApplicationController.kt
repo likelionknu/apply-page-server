@@ -44,13 +44,13 @@ class ApplicationController(
         @RequestBody requests: List<ApplicationDraftSaveRequest>
     ): GlobalResponse<Long> {
         val email = SecurityUtil.getUsername()
-        if (email == null || email.isBlank()) {
+        if (email.isBlank()) {
             throw AuthenticationInfoException()
         }
 
         val user: User = userRepository.findByEmail(email)
 
-        val applicationId = applicationService.saveDraft(user.id, recruitId, requests)
+        val applicationId = applicationService.saveDraft(user.id!!, recruitId, requests)
         return GlobalResponse.ok(applicationId)
     }
 
@@ -75,7 +75,7 @@ class ApplicationController(
         @PathVariable recruitId: Long
     ): GlobalResponse<Void> {
         val user: User = userRepository.findByEmail(SecurityUtil.getUsername())
-        applicationCancelService.cancel(user.id, recruitId)
+        applicationCancelService.cancel(user.id!!, recruitId)
         return GlobalResponse.ok()
     }
 
@@ -85,7 +85,7 @@ class ApplicationController(
         @PathVariable recruitId: Long
     ): GlobalResponse<Void> {
         val user: User = userRepository.findByEmail(SecurityUtil.getUsername())
-        applicationCancelService.restore(user.id, recruitId)
+        applicationCancelService.restore(user.id!!, recruitId)
         return GlobalResponse.ok()
     }
 }

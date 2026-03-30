@@ -4,6 +4,7 @@ import com.likelionknu.applyserver.common.security.exception.AuthenticationInfoE
 import org.springframework.security.core.context.SecurityContextHolder
 
 object SecurityUtil {
+    @JvmStatic
     fun getUsername(): String {
         val authentication = SecurityContextHolder.getContext().authentication
         val username = authentication?.name
