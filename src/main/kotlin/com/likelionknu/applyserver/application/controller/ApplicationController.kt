@@ -54,14 +54,14 @@ class ApplicationController(
 
     @GetMapping
     @Operation(summary = "내 지원서 목록 조회")
-    fun getMyApplications(): GlobalResponse<MutableList<ApplicationSummaryResponse?>?> {
+    fun getMyApplications(): GlobalResponse<List<ApplicationSummaryResponse?>?> {
         return GlobalResponse.ok(applicationQueryService.getMyApplications(SecurityUtil.getUsername()))
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "지원서 상세 조회")
     fun getApplicationDetail(
-        @PathVariable id: Long?
+        @PathVariable id: Long
     ): GlobalResponse<ApplicationDetailResponse?> {
         return GlobalResponse.ok(
             applicationQueryService.getApplicationDetail(SecurityUtil.getUsername(), id))
