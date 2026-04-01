@@ -35,7 +35,7 @@ class Application(
     val user: User,
 
     @OneToMany(mappedBy = "application", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val answers: ArrayList<RecruitAnswer?> = ArrayList<RecruitAnswer?>(),
+    var answers: MutableList<RecruitAnswer?> = ArrayList(),
 
     @Column(name = "note", length = 100)
     var note: String? = null,
