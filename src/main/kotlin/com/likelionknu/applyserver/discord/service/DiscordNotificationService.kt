@@ -41,14 +41,14 @@ class DiscordNotificationService(
         val now = LocalDateTime.now().format(formatter)
 
         val message ="""
-            ## 새로운 사용자가 등록 됨\n
-            > 신규 사용자가 서비스에 등록되었습니다.\n\n
+            ## 새로운 사용자가 등록 됨
+            > 신규 사용자가 서비스에 등록되었습니다.
             
-            ```yml\n
-            이름: $name\n
-            이메일 주소: $email\n
-            가입일: $now\n
-            ```\n
+            ```yml
+            이름: $name
+            이메일 주소: $email
+            가입일: $now
+            ```
             [.]($profileUrl)
         """.trimIndent()
         sendDiscordNotification(ChannelDivider.USER, message)
@@ -60,14 +60,14 @@ class DiscordNotificationService(
         val now = LocalDateTime.now().format(formatter)
 
         val message = """
-            ## 지원서 최종제출 됨\n
-            > 사용자가 지원서를 최종 제출했습니다.\n\n
+            ## 지원서 최종제출 됨
+            > 사용자가 지원서를 최종 제출했습니다.
             
-            ```yml\n
-            이름: $name\n
-            이메일 주소: $email\n
-            공고 명: $recruitTitle\n
-            제출일: $now\n
+            ```yml
+            이름: $name
+            이메일 주소: $email
+            공고 명: $recruitTitle
+            제출일: $now
             ```
         """.trimIndent()
 
@@ -80,14 +80,14 @@ class DiscordNotificationService(
         val now = LocalDateTime.now().format(formatter)
 
         val message = """
-            ## 지원서 임시저장 됨\n
-            > 사용자가 지원서를 임시저장 했습니다.\n\n
+            ## 지원서 임시저장 됨
+            > 사용자가 지원서를 임시저장 했습니다.
             
             ```yml
-            이름: $name\n
-            이메일 주소: $email\n
-            공고 명: $recruitTitle\n
-            임시저장일: $now\n
+            이름: $name
+            이메일 주소: $email
+            공고 명: $recruitTitle
+            임시저장일: $now
             ```
         """.trimIndent()
 
